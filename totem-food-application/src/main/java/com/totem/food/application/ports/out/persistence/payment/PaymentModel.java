@@ -1,7 +1,5 @@
 package com.totem.food.application.ports.out.persistence.payment;
 
-import com.totem.food.domain.customer.CustomerDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +16,8 @@ import java.time.ZonedDateTime;
 public class PaymentModel {
 
     private String id;
-    private OrderDomain order;
-    private CustomerDomain customer;
+    //@todo - refact private OrderDomain order;
+    //@todo - refact private CustomerDomain customer;
     private double price;
     private String token;
 

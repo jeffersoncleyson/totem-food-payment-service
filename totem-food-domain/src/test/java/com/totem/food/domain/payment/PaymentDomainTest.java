@@ -1,7 +1,5 @@
 package com.totem.food.domain.payment;
 
-import com.totem.food.domain.customer.CustomerDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZoneOffset;
@@ -21,9 +19,10 @@ class PaymentDomainTest {
         //## Given
         var payment = PaymentDomain.builder()
                 .id("123")
-                .order(new
-                        OrderDomain())
-                .customer(new CustomerDomain())
+//@todo - refact
+//                .order(new
+//                        OrderDomain())
+//                .customer(new CustomerDomain())
                 .price(100.0)
                 .token("abc123")
                 .status(PaymentDomain.PaymentStatus.PENDING)
@@ -45,9 +44,10 @@ class PaymentDomainTest {
         //## Given
         var payment = PaymentDomain.builder()
                 .id("123")
-                .order(new
-                        OrderDomain())
-                .customer(new CustomerDomain())
+//@todo - refact
+//                .order(new
+//                        OrderDomain())
+//                .customer(new CustomerDomain())
                 .price(100.0)
                 .token("abc123")
                 .status(PaymentDomain.PaymentStatus.PENDING)
@@ -69,9 +69,10 @@ class PaymentDomainTest {
         //## Given
         var payment = PaymentDomain.builder()
                 .id("123")
-                .order(new
-                        OrderDomain())
-                .customer(new CustomerDomain())
+//@todo - refact
+//                .order(new
+//                        OrderDomain())
+//                .customer(new CustomerDomain())
                 .price(100.0)
                 .token("abc123")
                 .status(PaymentDomain.PaymentStatus.PENDING)

@@ -9,8 +9,9 @@ public class PaymentDomainMock {
     public static PaymentDomain getPaymentStatusPendingMock() {
         return PaymentDomain.builder()
                 .id("1")
-                .order(OrderDomainMock.getStatusNewMock())
-                .customer(CustomerDomainMock.getMock())
+//@todo - refact
+//                .order(OrderDomainMock.getStatusNewMock())
+//                .customer(CustomerDomainMock.getMock())
                 .price(49.99)
                 .token("token")
                 .status(PaymentDomain.PaymentStatus.PENDING)
@@ -22,8 +23,9 @@ public class PaymentDomainMock {
     public static PaymentDomain getPaymentStatusCompletedMock() {
         return PaymentDomain.builder()
                 .id("1")
-                .order(OrderDomainMock.getStatusNewMock())
-                .customer(CustomerDomainMock.getMock())
+//@todo - refact
+//                .order(OrderDomainMock.getStatusNewMock())
+//                .customer(CustomerDomainMock.getMock())
                 .price(49.99)
                 .token("token")
                 .status(PaymentDomain.PaymentStatus.COMPLETED)

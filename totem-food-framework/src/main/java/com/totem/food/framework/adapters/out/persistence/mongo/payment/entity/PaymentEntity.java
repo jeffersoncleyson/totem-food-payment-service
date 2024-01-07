@@ -1,7 +1,5 @@
 package com.totem.food.framework.adapters.out.persistence.mongo.payment.entity;
 
-import com.totem.food.framework.adapters.out.persistence.mongo.customer.entity.CustomerEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.order.totem.entity.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,10 +21,11 @@ public class PaymentEntity {
 
     @Id
     private String id;
-    @DBRef
-    private OrderEntity order;
-    @DBRef
-    private CustomerEntity customer;
+//@todo - refact
+//    @DBRef
+//    private OrderEntity order;
+//    @DBRef
+//    private CustomerEntity customer;
     private String status;
     private double price;
     private String token;

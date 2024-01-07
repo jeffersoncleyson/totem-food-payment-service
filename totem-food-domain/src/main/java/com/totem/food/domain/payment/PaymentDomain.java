@@ -1,7 +1,5 @@
 package com.totem.food.domain.payment;
 
-import com.totem.food.domain.customer.CustomerDomain;
-import com.totem.food.domain.order.totem.OrderDomain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +16,8 @@ import java.time.ZonedDateTime;
 public class PaymentDomain {
 
     private String id;
-    private OrderDomain order;
-    private CustomerDomain customer;
+    //@todo - refact private OrderDomain order;
+    //@todo - refact private CustomerDomain customer;
     private double price;
     private String token;
 

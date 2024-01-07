@@ -3,7 +3,6 @@ package com.totem.food.framework.adapters.out.persistence.mongo.payment.reposito
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
 import lombok.SneakyThrows;
@@ -89,7 +88,8 @@ class SearchPaymentRepositoryAdapterTest {
         //## Given
         final var paymentEntity = PaymentEntityMock.getPaymentEntity(PaymentDomain.PaymentStatus.PENDING);
         final var paymentFilter = PaymentFilterDto.builder()
-                .orderId(paymentEntity.getOrder().getId())
+                //@todo - refact
+                //.orderId(paymentEntity.getOrder().getId())
                 .token(paymentEntity.getToken())
                 .build();
 
@@ -118,8 +118,9 @@ class SearchPaymentRepositoryAdapterTest {
         //## Given
         final var paymentEntity = PaymentEntityMock.getPaymentEntity(PaymentDomain.PaymentStatus.PENDING);
         final var paymentFilter = PaymentFilterDto.builder()
-                .orderId(paymentEntity.getOrder().getId())
-                .status(OrderStatusEnumDomain.IN_PREPARATION.key)
+//@todo - refact
+//                .orderId(paymentEntity.getOrder().getId())
+//                .status(OrderStatusEnumDomain.IN_PREPARATION.key)
                 .build();
 
         //## Given Mocks

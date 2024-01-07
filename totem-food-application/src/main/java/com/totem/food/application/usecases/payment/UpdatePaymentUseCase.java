@@ -3,17 +3,16 @@ package com.totem.food.application.usecases.payment;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
-import com.totem.food.application.ports.in.mappers.order.totem.IOrderMapper;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
+import com.totem.food.application.ports.out.internal.order.OrderFilterRequest;
+import com.totem.food.application.ports.out.internal.order.OrderResponseRequest;
+import com.totem.food.application.ports.out.internal.order.OrderUpdateRequest;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
-import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
-import com.totem.food.application.ports.out.persistence.order.totem.OrderModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
-import com.totem.food.domain.order.enums.OrderStatusEnumDomain;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -27,10 +26,9 @@ import java.util.Optional;
 public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Boolean> {
 
     private final IPaymentMapper iPaymentMapper;
-    private final IOrderMapper iOrderMapper;
     private final IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
-    private final ISearchUniqueRepositoryPort<Optional<OrderModel>> iSearchOrderModel;
-    private final IUpdateRepositoryPort<OrderModel> iUpdateOrderRepositoryPort;
+    private final ISendRequestPort<OrderFilterRequest, Optional<OrderResponseRequest>> iSearchOrderModel;
+    private final ISendRequestPort<OrderUpdateRequest, Boolean> iUpdateOrderRepositoryPort;
     private final ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
     private final ISendRequestPort<String, PaymentElementDto> iSendRequest;
 
@@ -52,8 +50,12 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
                 final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
 
-                final var orderModel = iSearchOrderModel.findById(paymentModel.getOrder().getId())
-                        .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", paymentModel.getOrder().getId())));
+                final var orderId = "XXX"; //@todo - refact - arrumar forma de recuperar o orderId do payment
+                final var orderFilterRequest = OrderFilterRequest.builder()
+                        .orderId(orderId)
+                        .build();
+                final var orderModel = iSearchOrderModel.sendRequest(orderFilterRequest)
+                        .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", orderId)));
 
                 if (verifyOrderPaid(paymentDomain, orderModel)) {
                     updateOrderReceived(orderModel);
@@ -65,8 +67,8 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     }
 
     //## Verify Order is Received and Payment is Completed
-    private static boolean verifyOrderPaid(PaymentDomain paymentDomain, OrderModel orderModel) {
-        return !paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED) && !orderModel.getStatus().equals(OrderStatusEnumDomain.RECEIVED);
+    private static boolean verifyOrderPaid(PaymentDomain paymentDomain, OrderResponseRequest orderResponseRequest) {
+        return !paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED) && !orderResponseRequest.getStatus().equals("RECEIVED"); //@todo - refact - colocar enum no lugar
     }
 
     //## Update Payment
@@ -77,11 +79,11 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     }
 
     //## Update Order
-    private void updateOrderReceived(OrderModel orderModel) {
-        final var orderDomain = iOrderMapper.toDomain(orderModel);
-        orderDomain.updateOrderStatus(OrderStatusEnumDomain.RECEIVED);
-        orderDomain.updateModifiedAt();
-        final var orderModelValidated = iOrderMapper.toModel(orderDomain);
-        iUpdateOrderRepositoryPort.updateItem(orderModelValidated);
+    private void updateOrderReceived(OrderResponseRequest orderResponseRequest) {
+        final var orderUpdateRequest = OrderUpdateRequest.builder()
+                .orderId(orderResponseRequest.getOrderId())
+                .status("RECEIVED") //@todo - refact - colocar enum no lugar
+                .build();
+        iUpdateOrderRepositoryPort.sendRequest(orderUpdateRequest);
     }
 }
