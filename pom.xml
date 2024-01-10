@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.totem.food</groupId>
-    <artifactId>totem-food-service</artifactId>
+    <artifactId>totem-food-payment-service</artifactId>
     <version>1.0.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>totem-food-service</name>
-    <description>Totem Food Parent</description>
+    <name>totem-food-payment-service</name>
+    <description>Totem Food Payment Parent</description>
     <modules>
-        <module>totem-food-framework</module>
-        <module>totem-food-application</module>
-        <module>totem-food-domain</module>
-        <module>totem-food-backend</module>
+        <module>totem-food-payment-framework</module>
+        <module>totem-food-payment-application</module>
+        <module>totem-food-payment-domain</module>
+        <module>totem-food-payment-backend</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -45,7 +45,7 @@
         <mockito-junit-jupiter.version>5.3.1</mockito-junit-jupiter.version>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
-        <sonar.projectName>totem-food-service</sonar.projectName>
+        <sonar.projectName>totem-food-payment-service</sonar.projectName>
         <sonar.organization>fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
@@ -67,17 +67,17 @@
         <dependencies>
             <dependency>
                 <groupId>com.totem.food</groupId>
-                <artifactId>totem-food-application</artifactId>
+                <artifactId>totem-food-payment-application</artifactId>
                 <version>1.0.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.totem.food</groupId>
-                <artifactId>totem-food-framework</artifactId>
+                <artifactId>totem-food-payment-framework</artifactId>
                 <version>1.0.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.totem.food</groupId>
-                <artifactId>totem-food-domain</artifactId>
+                <artifactId>totem-food-payment-domain</artifactId>
                 <version>1.0.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>

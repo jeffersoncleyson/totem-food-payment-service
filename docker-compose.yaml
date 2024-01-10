@@ -28,9 +28,9 @@ services:
     networks:
       - developer-network
 
-  totem-food-service:
-    container_name: totem-food-service
-    hostname: totem-food-service
+  totem-food-payment-service:
+    container_name: totem-food-payment-service
+    hostname: totem-food-payment-service
     build:
       context: .
       dockerfile: Dockerfile

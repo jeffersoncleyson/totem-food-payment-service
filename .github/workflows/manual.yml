@@ -42,8 +42,8 @@ jobs:
       - name: Upload Artifact Jar
         uses: actions/upload-artifact@v3
         with:
-          name: totem-food-service
-          path: ./totem-food-backend/target/*.jar
+          name: totem-food-payment-service
+          path: ./totem-food-payment-backend/target/*.jar
           retention-days: 1
 
   push_to_registry:
@@ -64,12 +64,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: jeffersoncleyson/totem-food-service
+          images: jeffersoncleyson/totem-food-payment-service
 
       - name: Download Jar Artifact
         uses: actions/download-artifact@v3
         with:
-          name: totem-food-service
+          name: totem-food-payment-service
 
       - name: Build and push Docker image
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
@@ -77,7 +77,7 @@ jobs:
           context: .
           file: ./DockerfileGitHubActions
           push: true
-          tags: jeffersoncleyson/totem-food-service:temp-${{ github.event.inputs.imageTag }}
+          tags: jeffersoncleyson/totem-food-payment-service:temp-${{ github.event.inputs.imageTag }}
 
   deploy_eks:
     needs: push_to_registry
@@ -108,4 +108,4 @@ jobs:
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: |
-            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=temp-${{ github.event.inputs.imageTag }}
+            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-payment-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=temp-${{ github.event.inputs.imageTag }}

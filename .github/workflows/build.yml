@@ -46,13 +46,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=totem-food-payment-service-4787bf24ba181ac258cb520837a657896a92044c
 
       - name: Upload Artifact Jar
         uses: actions/upload-artifact@v3
         with:
-          name: totem-food-service
-          path: ./totem-food-backend/target/*.jar
+          name: totem-food-payment-service
+          path: ./totem-food-payment-backend/target/*.jar
           retention-days: 1
 
   push_to_registry:
@@ -74,12 +74,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: jeffersoncleyson/totem-food-service
+          images: jeffersoncleyson/totem-food-payment-service
 
       - name: Download Jar Artifact
         uses: actions/download-artifact@v3
         with:
-          name: totem-food-service
+          name: totem-food-payment-service
 
       - name: Build and push Docker image
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
@@ -120,7 +120,7 @@ jobs:
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: |
-            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=${{ github.ref_name }}
+            helm upgrade ${{ vars.RELEASE_NAME }} ./totem-food-service-helm-chart/totem-food-payment-chart --namespace ${{ vars.NAMESPACE }} --set=image.tag=${{ github.ref_name }}
 
 
 
