@@ -1,24 +1,24 @@
-package com.totem.food.application.ports.in.dtos.payment;
+package com.totem.food.application.ports.out.internal.customer;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
 @Getter
-@Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentDto {
+public class CustomerResponse {
 
     private String id;
-    private String order;
-    private String customer;
-    private double price;
-    private String status;
-    private String qrcodeBase64;
+    private String name;
+    private String cpf;
+    private String email;
+    private String mobile;
+    private String password;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 }

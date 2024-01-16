@@ -52,3 +52,10 @@ cognito:
     id: ${COGNITO_USER_POOL_ID:}
     clientId: ${COGNITO_CLIENT_ID:}
     clientSecret: ${COGNITO_CLIENT_SECRET:}
+
+ms:
+  internal:
+    order:
+      url: ${MS_INTERNAL_ORDER:http://localhost:8080}
+    customer:
+      url: ${MS_INTERNAL_ORDER:http://localhost:8081}

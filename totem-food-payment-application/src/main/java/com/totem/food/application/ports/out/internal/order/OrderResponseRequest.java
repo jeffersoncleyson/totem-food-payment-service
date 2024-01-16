@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderResponseRequest {
 
-    private String orderId;
+    private String id;
     private String status;
     private double price;
 }

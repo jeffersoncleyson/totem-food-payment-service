@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomerFilterRequest {
 
-    private String customerId;
+    private String customer;
 }

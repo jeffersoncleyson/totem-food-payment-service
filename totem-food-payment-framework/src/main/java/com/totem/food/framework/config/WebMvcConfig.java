@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
-import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_ORDER;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT;
 
 @RequiredArgsConstructor
 @Configuration
@@ -34,7 +34,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(xUserIdentifierInterceptor)
-                .addPathPatterns(API_VERSION_1 + TOTEM_ORDER + "/**")
+                .addPathPatterns(API_VERSION_1 + TOTEM_PAYMENT + "/**")
                 .excludePathPatterns(EXCLUDE_PATH_PATTERNS);
     }
 }

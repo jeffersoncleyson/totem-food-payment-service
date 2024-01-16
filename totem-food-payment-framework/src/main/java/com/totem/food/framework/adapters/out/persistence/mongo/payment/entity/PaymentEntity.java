@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.ZonedDateTime;
@@ -21,11 +20,8 @@ public class PaymentEntity {
 
     @Id
     private String id;
-//@todo - refact
-//    @DBRef
-//    private OrderEntity order;
-//    @DBRef
-//    private CustomerEntity customer;
+    private String order;
+    private String customer;
     private String status;
     private double price;
     private String token;

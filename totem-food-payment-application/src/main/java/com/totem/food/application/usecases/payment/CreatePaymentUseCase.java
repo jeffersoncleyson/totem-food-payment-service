@@ -1,11 +1,12 @@
 package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.exceptions.ElementNotFoundException;
+import com.totem.food.application.ports.in.dtos.context.XUserIdentifierContextDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.internal.customer.CustomerFilterRequest;
-import com.totem.food.application.ports.out.internal.customer.CustomerResponseRequest;
+import com.totem.food.application.ports.out.internal.customer.CustomerResponse;
 import com.totem.food.application.ports.out.internal.order.OrderFilterRequest;
 import com.totem.food.application.ports.out.internal.order.OrderResponseRequest;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
@@ -13,6 +14,7 @@ import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositor
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
+import com.totem.food.application.usecases.commons.IContextUseCase;
 import com.totem.food.application.usecases.commons.ICreateUseCase;
 import com.totem.food.domain.exceptions.InvalidStatusException;
 import com.totem.food.domain.payment.PaymentDomain;
@@ -30,8 +32,9 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
     private final IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
     private final IPaymentMapper iPaymentMapper;
     private final ISendRequestPort<OrderFilterRequest, Optional<OrderResponseRequest>> iSearchUniqueOrderRepositoryPort;
-    private final ISendRequestPort<CustomerFilterRequest, Optional<CustomerResponseRequest>> iSearchUniqueCustomerRepositoryPort;
+    private final ISendRequestPort<CustomerFilterRequest, Optional<CustomerResponse>> iSearchUniqueCustomerRepositoryPort;
     private final ISendRequestPort<PaymentModel, PaymentQRCodeDto> iSendRequest;
+    private final IContextUseCase<XUserIdentifierContextDto, String> iContextUseCase;
 
     @Override
     public PaymentQRCodeDto createItem(PaymentCreateDto item) {
@@ -44,18 +47,18 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
         if (orderDomain.getStatus().equals("WAITING_PAYMENT")) { //@todo - refact - trocar para enum
             final var paymentDomainBuilder = PaymentDomain.builder();
 
-            Optional.ofNullable(item.getCustomerId())
+            Optional.ofNullable(iContextUseCase.getContext())
                     .filter(StringUtils::isNotEmpty)
-                    .ifPresent(customerId -> {
+                    .ifPresent(customer -> {
                         final var customerModel = iSearchUniqueCustomerRepositoryPort.sendRequest(CustomerFilterRequest.builder()
-                                        .customerId(customerId)
+                                        .customer(customer)
                                         .build())
-                                .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", customerId)));
-                        //paymentDomainBuilder.customer(customerDomain); //@todo - refact - setar customerId
+                                .orElseThrow(() -> new ElementNotFoundException(String.format("Customer [%s] not found", customer)));
+                        paymentDomainBuilder.customer(customerModel.getCpf());
                     });
 
 
-            //@todo - refact - setar orderId paymentDomainBuilder.order(domain);
+            paymentDomainBuilder.order(orderDomain.getId());
             paymentDomainBuilder.price(orderDomain.getPrice());
             paymentDomainBuilder.token(UUID.randomUUID().toString());
             paymentDomainBuilder.status(PaymentDomain.PaymentStatus.PENDING);

@@ -16,8 +16,8 @@ import java.time.ZonedDateTime;
 public class PaymentModel {
 
     private String id;
-    //@todo - refact private OrderDomain order;
-    //@todo - refact private CustomerDomain customer;
+    private String order;
+    private String customer;
     private double price;
     private String token;
 

@@ -50,7 +50,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
                 final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
 
-                final var orderId = "XXX"; //@todo - refact - arrumar forma de recuperar o orderId do payment
+                final var orderId = paymentDomain.getOrder();
                 final var orderFilterRequest = OrderFilterRequest.builder()
                         .orderId(orderId)
                         .build();
@@ -58,8 +58,8 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
                         .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", orderId)));
 
                 if (verifyOrderPaid(paymentDomain, orderModel)) {
-                    updateOrderReceived(orderModel);
                     updatePaymentCompleted(paymentDomain);
+                    updateOrderReceived(orderModel);
                 }
             }
         }
@@ -68,7 +68,8 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
     //## Verify Order is Received and Payment is Completed
     private static boolean verifyOrderPaid(PaymentDomain paymentDomain, OrderResponseRequest orderResponseRequest) {
-        return !paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED) && !orderResponseRequest.getStatus().equals("RECEIVED"); //@todo - refact - colocar enum no lugar
+        return !paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED)
+                && !orderResponseRequest.getStatus().equals("RECEIVED"); //@todo - refact - colocar enum no lugar
     }
 
     //## Update Payment
@@ -81,7 +82,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     //## Update Order
     private void updateOrderReceived(OrderResponseRequest orderResponseRequest) {
         final var orderUpdateRequest = OrderUpdateRequest.builder()
-                .orderId(orderResponseRequest.getOrderId())
+                .orderId(orderResponseRequest.getId())
                 .status("RECEIVED") //@todo - refact - colocar enum no lugar
                 .build();
         iUpdateOrderRepositoryPort.sendRequest(orderUpdateRequest);

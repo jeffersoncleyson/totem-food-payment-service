@@ -12,5 +12,5 @@ import lombok.Setter;
 public class PaymentCreateDto {
 
     private String orderId;
-    private String customerId;
+
 }

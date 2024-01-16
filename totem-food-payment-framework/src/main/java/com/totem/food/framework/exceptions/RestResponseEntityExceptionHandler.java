@@ -3,6 +3,7 @@ package com.totem.food.framework.exceptions;
 import com.totem.food.application.exceptions.ElementExistsException;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
+import com.totem.food.application.exceptions.HeaderMissingException;
 import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.application.exceptions.response.ResponseError;
 import com.totem.food.application.exceptions.response.ResponseWrapper;
@@ -93,6 +94,15 @@ public class RestResponseEntityExceptionHandler
     }
 
 
+    @ExceptionHandler(value = HeaderMissingException.class )
+    protected ResponseEntity<Object> handleConflict(
+            HeaderMissingException ex, WebRequest request) {
+        final var responseError = ResponseError.builder()
+                .title("Invalid Input")
+                .description(ex.getMessage()).build();
+        return handleExceptionInternal(ex, new ResponseWrapper<ResponseError>(responseError),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
 
 
 }
