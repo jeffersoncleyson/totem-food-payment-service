@@ -22,7 +22,7 @@ spring:
     default-property-inclusion: non_null
   data:
     mongodb:
-      uri: mongodb://root:qwe123@localhost:27017/totem-food?authSource=admin
+      uri: ${PAYMENT_MONGODB_URI:mongodb://root:qwe123@localhost:27017/totem-food?authSource=admin}
 
 payment:
   url: ${PAYMENT_GATEWAY_URL:https://api.mercadopago.com}
@@ -31,31 +31,15 @@ payment:
   store_user_id: ${STORE_USER_ID:}
   store_token_id: ${STORE_TOKEN:}
 
-mail:
-  smtp:
-    host: ${SMTP_HOST:localhost}
-    port: ${SMTP_PORT:1025}
-    username: ${SMTP_USERNAME:username}
-    password: ${SMTP_PASSWORD:password}
-    auth: ${SMTP_AUTH_ENABLED:false}
-    tls: ${SMTP_TLS_ENABLED:false}
-    email: ${SMTP_EMAIL:contato@totem.food.service.com.br}
-
 app:
   version: ^project.version^
   name: ^project.name^
   description: ^project.description^
-
-
-cognito:
-  userPool:
-    id: ${COGNITO_USER_POOL_ID:}
-    clientId: ${COGNITO_CLIENT_ID:}
-    clientSecret: ${COGNITO_CLIENT_SECRET:}
+  inspect_beans: ${INSPECT_BEANS:false}
 
 ms:
   internal:
     order:
       url: ${MS_INTERNAL_ORDER:http://localhost:8080}
     customer:
-      url: ${MS_INTERNAL_ORDER:http://localhost:8081}
+      url: ${MS_INTERNAL_CUSTOMER:http://localhost:8081}

@@ -46,7 +46,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=totem-food-payment-service-4787bf24ba181ac258cb520837a657896a92044c
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service
 
       - name: Upload Artifact Jar
         uses: actions/upload-artifact@v3

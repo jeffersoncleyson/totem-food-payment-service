@@ -79,3 +79,6 @@ build/
 
 ### Docker Compose Volumes ###
 /volumes/
+
+### Environment
+.env

@@ -13,9 +13,8 @@ public class PaymentEntityMock {
     public static PaymentEntity getPaymentEntity(PaymentDomain.PaymentStatus paymentStatus){
         return PaymentEntity.builder()
                 .id(new ObjectId().toHexString())
-//@todo - refact
-//                .order(OrderEntityMock.getMock())
-//                .customer(CustomerEntityMock.getMock())
+                .order(ObjectId.get().toHexString())
+                .customer(UUID.randomUUID().toString())
                 .price(50D)
                 .token(UUID.randomUUID().toString())
                 .status(paymentStatus.key)

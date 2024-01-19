@@ -32,6 +32,8 @@ public class PaymentMocks {
     public static PaymentDto paymentDto(){
         return new PaymentDto(
                 UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
                 25.0D,
                 UUID.randomUUID().toString(),
                 PaymentDomain.PaymentStatus.COMPLETED.key,

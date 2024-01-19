@@ -3,6 +3,7 @@ package com.totem.food.framework.exceptions;
 import com.totem.food.application.exceptions.ElementExistsException;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.exceptions.ExternalCommunicationInvalid;
+import com.totem.food.application.exceptions.HeaderMissingException;
 import com.totem.food.application.exceptions.InvalidInput;
 import com.totem.food.domain.exceptions.InvalidEnum;
 import com.totem.food.domain.exceptions.InvalidStatusException;
@@ -53,6 +54,7 @@ class RestResponseEntityExceptionHandlerTest {
         EXCEPTED_EXCEPTIONS.add(ExternalCommunicationInvalid.class);
         EXCEPTED_EXCEPTIONS.add(InvalidEnum.class);
         EXCEPTED_EXCEPTIONS.add(InvalidInput.class);
+        EXCEPTED_EXCEPTIONS.add(HeaderMissingException.class);
     }
 
     private MockMvc mockMvc;

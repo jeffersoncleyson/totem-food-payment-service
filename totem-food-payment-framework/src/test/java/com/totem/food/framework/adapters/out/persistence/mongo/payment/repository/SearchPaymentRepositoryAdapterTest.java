@@ -88,8 +88,7 @@ class SearchPaymentRepositoryAdapterTest {
         //## Given
         final var paymentEntity = PaymentEntityMock.getPaymentEntity(PaymentDomain.PaymentStatus.PENDING);
         final var paymentFilter = PaymentFilterDto.builder()
-                //@todo - refact
-                //.orderId(paymentEntity.getOrder().getId())
+                .orderId(paymentEntity.getOrder())
                 .token(paymentEntity.getToken())
                 .build();
 
@@ -118,9 +117,8 @@ class SearchPaymentRepositoryAdapterTest {
         //## Given
         final var paymentEntity = PaymentEntityMock.getPaymentEntity(PaymentDomain.PaymentStatus.PENDING);
         final var paymentFilter = PaymentFilterDto.builder()
-//@todo - refact
-//                .orderId(paymentEntity.getOrder().getId())
-//                .status(OrderStatusEnumDomain.IN_PREPARATION.key)
+                .orderId(paymentEntity.getOrder())
+                .status("IN_PREPARATION")
                 .build();
 
         //## Given Mocks
