@@ -81,4 +81,4 @@ build/
 /volumes/
 
 ### Environment
-.env
+**/.env

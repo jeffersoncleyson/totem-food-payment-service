@@ -1,19 +1,18 @@
 version: '3.5'
 
 networks:
-  payment-service-network:
+  order-service-network:
     driver: bridge
 
 volumes:
   mongo_data:
 
 services:
-
   mongo-dev:
     image: mongo:latest
     container_name: mongo-dev
     hostname: mongo-dev
-    env_file: .env
+    env_file: envs/mongo/.env
     ports:
       - "27017:27017"
     volumes:
@@ -25,39 +24,52 @@ services:
       retries: 5
       start_period: 5s
     networks:
-      - payment-service-network
-
-  totem-food-payment-service:
-    container_name: totem-food-payment-service
-    hostname: totem-food-payment-service
-    image: jeffersoncleyson/totem-food-payment-service:latest
-    env_file: .env
-    ports:
-      - "8082:8082"
-      - "8787:8787" # DEBUG
-    depends_on:
-      - mongo-dev
-    networks:
-      - payment-service-network
-
-  totem-food-customer-service:
-    container_name: totem-food-customer-service
-    hostname: totem-food-customer-service
-    image: jeffersoncleyson/totem-food-customer-service:latest
-    env_file: .env
-    ports:
-      - "8081:8081"
-      - "8781:8787" # DEBUG
-    networks:
-      - payment-service-network
+      - order-service-network
 
   totem-food-order-service:
     container_name: totem-food-order-service
     hostname: totem-food-order-service
     image: jeffersoncleyson/totem-food-order-service:latest
-    env_file: .env
+    env_file: envs/order/.env
     ports:
       - "8080:8080"
       - "8780:8787" # DEBUG
+    depends_on:
+      - mongo-dev
     networks:
-      - payment-service-network
+      - order-service-network
+
+  totem-food-payment-service:
+    container_name: totem-food-payment-service
+    hostname: totem-food-payment-service
+    image: jeffersoncleyson/totem-food-payment-service:latest
+    env_file: envs/payment/.env
+    ports:
+      - "8082:8082"
+      - "8782:8787" # DEBUG
+    depends_on:
+      - mongo-dev
+    networks:
+      - order-service-network
+
+  totem-food-customer-service:
+    container_name: totem-food-customer-service
+    hostname: totem-food-customer-service
+    image: jeffersoncleyson/totem-food-customer-service:latest
+    env_file: envs/customer/.env
+    ports:
+      - "8081:8081"
+      - "8781:8787" # DEBUG
+    networks:
+      - order-service-network
+
+  mailhog:
+    container_name: mailhog
+    hostname: mailhog
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - order-service-network
