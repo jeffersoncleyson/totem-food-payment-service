@@ -1,10 +1,10 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
+package com.totem.food.framework.adapters.out.persistence.mysql.payment.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mysql.commons.BaseRepository;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper.IPaymentEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueRepositoryPort<Optional<PaymentModel>> {
 
     @Repository
-    protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
+    protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, Integer> {
 
     }
 
@@ -24,7 +24,7 @@ public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueReposi
     private final IPaymentEntityMapper iPaymentMapper;
 
     @Override
-    public Optional<PaymentModel> findById(String id) {
+    public Optional<PaymentModel> findById(Integer id) {
         return repository.findById(id).map(iPaymentMapper::toModel);
     }
 

@@ -18,7 +18,7 @@ class PaymentDomainTest {
 
         //## Given
         var payment = PaymentDomain.builder()
-                .id("123")
+                .id(1)
 //@todo - refact
 //                .order(new
 //                        OrderDomain())
@@ -43,7 +43,7 @@ class PaymentDomainTest {
 
         //## Given
         var payment = PaymentDomain.builder()
-                .id("123")
+                .id(1)
 //@todo - refact
 //                .order(new
 //                        OrderDomain())
@@ -68,7 +68,7 @@ class PaymentDomainTest {
 
         //## Given
         var payment = PaymentDomain.builder()
-                .id("123")
+                .id(1)
 //@todo - refact
 //                .order(new
 //                        OrderDomain())

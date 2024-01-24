@@ -2,7 +2,6 @@ package mocks.models;
 
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
-import org.bson.types.ObjectId;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -12,7 +11,7 @@ public class PaymentModelMock {
 
     public static PaymentModel getPaymentDomain(PaymentDomain.PaymentStatus paymentStatus){
         return PaymentModel.builder()
-                .id(new ObjectId().toHexString())
+                .id(1)
 //@todo - refact
 //                .order(OrderDomainMock.getStatusNewMock())
 //                .customer(CustomerDomainMock.getMock())

@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,10 +59,10 @@ class SearchUniquePaymentUseCaseTest {
         var paymentDomain = PaymentModelMock.getPaymentStatusPendingMock();
 
         //## Given
-        when(iSearchUniqueRepositoryPort.findById(anyString())).thenReturn(Optional.of(paymentDomain));
+        when(iSearchUniqueRepositoryPort.findById(anyInt())).thenReturn(Optional.of(paymentDomain));
 
         //## When
-        final var paymentDto = searchUniquePaymentUseCase.item(anyString());
+        final var paymentDto = searchUniquePaymentUseCase.item(anyInt());
 
         //## Then
         assertNotNull(paymentDto);

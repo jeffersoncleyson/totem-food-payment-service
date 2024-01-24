@@ -35,6 +35,7 @@ import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.never;
@@ -55,7 +56,7 @@ class TotemPaymentRestApiAdapterTest {
     @Mock
     private ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> iCreateUseCase;
     @Mock
-    private ISearchUniqueUseCase<String, Optional<PaymentDto>> iSearchUniqueUseCase;
+    private ISearchUniqueUseCase<Integer, Optional<PaymentDto>> iSearchUniqueUseCase;
     @Mock
     private ICreateImageUseCase<PaymentDto, byte[]> iCreateImageUseCase;
     @Mock
@@ -82,7 +83,7 @@ class TotemPaymentRestApiAdapterTest {
 
         //### Given - Mocks
         final var paymentCreateDto = PaymentMocks.paymentCreateDto(UUID.randomUUID().toString(), "123");
-        final var paymentQRCodeDto = PaymentMocks.paymentQRCodeDto(UUID.randomUUID().toString(), PaymentDomain.PaymentStatus.PENDING.key);
+        final var paymentQRCodeDto = PaymentMocks.paymentQRCodeDto(1, PaymentDomain.PaymentStatus.PENDING.key);
         when(iCreateUseCase.createItem(any(PaymentCreateDto.class))).thenReturn(paymentQRCodeDto);
 
         //### When
@@ -137,7 +138,7 @@ class TotemPaymentRestApiAdapterTest {
 
         assertNotNull(responseJson.getContentAsByteArray());
 
-        verify(iSearchUniqueUseCase, times(1)).item(anyString());
+        verify(iSearchUniqueUseCase, times(1)).item(anyInt());
     }
 
 

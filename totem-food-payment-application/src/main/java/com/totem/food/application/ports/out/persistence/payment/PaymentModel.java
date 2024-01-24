@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class PaymentModel {
 
-    private String id;
+    private Integer id;
     private String order;
     private String customer;
     private double price;

@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<String, PaymentElementDto> {
+public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<Integer, PaymentElementDto> {
 
     @Value("${payment.store_token_id}")
     private String token;
@@ -20,9 +20,9 @@ public class SearchPaymentExternalRequestAdapter implements ISendRequestPort<Str
     private final MercadoPagoClient mercadoPagoClient;
 
     @Override
-    public PaymentElementDto sendRequest(String externalReference) {
+    public PaymentElementDto sendRequest(Integer externalReference) {
 
-        var elementEntity = mercadoPagoClient.getOrderDetails(token, externalReference).getBody();
+        var elementEntity = mercadoPagoClient.getOrderDetails(token, String.valueOf(externalReference)).getBody();
 
         if (Objects.isNull(elementEntity) || Objects.isNull(elementEntity.getData())) {
             return null;

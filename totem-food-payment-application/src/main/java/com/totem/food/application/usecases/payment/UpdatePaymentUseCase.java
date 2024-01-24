@@ -30,7 +30,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     private final ISendRequestPort<OrderFilterRequest, Optional<OrderResponseRequest>> iSearchOrderModel;
     private final ISendRequestPort<OrderUpdateRequest, Boolean> iUpdateOrderRepositoryPort;
     private final ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
-    private final ISendRequestPort<String, PaymentElementDto> iSendRequest;
+    private final ISendRequestPort<Integer, PaymentElementDto> iSendRequest;
 
     @Override
     public Boolean updateItem(PaymentFilterDto item, String id) {

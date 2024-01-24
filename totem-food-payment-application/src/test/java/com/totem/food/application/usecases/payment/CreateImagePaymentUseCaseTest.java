@@ -54,7 +54,7 @@ class CreateImagePaymentUseCaseTest {
 
         //## Mock - Object
         var paymentDto = PaymentDto.builder()
-                .id(UUID.randomUUID().toString())
+                .id(1)
                 .qrcodeBase64(UUID.randomUUID().toString())
                 .build();
         var paymentModel = PaymentModelMock.getPaymentStatusPendingMock();

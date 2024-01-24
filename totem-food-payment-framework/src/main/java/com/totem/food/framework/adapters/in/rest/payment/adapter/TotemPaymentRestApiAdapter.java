@@ -39,7 +39,7 @@ public class TotemPaymentRestApiAdapter implements ICreateRestApiPort<PaymentCre
         IGetStatusRestApiPort<ResponseEntity<PaymentDto>> {
 
     private final ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> iCreateUseCase;
-    private final ISearchUniqueUseCase<String, Optional<PaymentDto>> iSearchUniqueUseCase;
+    private final ISearchUniqueUseCase<Integer, Optional<PaymentDto>> iSearchUniqueUseCase;
     private final ICreateImageUseCase<PaymentDto, byte[]> iCreateImageUseCase;
     private final ISearchUseCase<PaymentFilterDto, Optional<PaymentDto>> iSearchUseCase;
 
@@ -52,7 +52,7 @@ public class TotemPaymentRestApiAdapter implements ICreateRestApiPort<PaymentCre
 
     @GetMapping(value = PAYMENT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<Object> getImage(@PathVariable String paymentId,
+    public ResponseEntity<Object> getImage(@PathVariable Integer paymentId,
                                            @RequestHeader(value = "x-with-image-qrcode", defaultValue = "true") boolean withImageQrCode) {
 
         ResponseEntity<PaymentDto> paymentDto = iSearchUniqueUseCase.item(paymentId).map(ResponseEntity.status(HttpStatus.OK)::body)

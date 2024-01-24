@@ -8,7 +8,7 @@ public class PaymentDomainMock {
 
     public static PaymentDomain getPaymentStatusPendingMock() {
         return PaymentDomain.builder()
-                .id("1")
+                .id(1)
 //@todo - refact
 //                .order(OrderDomainMock.getStatusNewMock())
 //                .customer(CustomerDomainMock.getMock())
@@ -22,7 +22,7 @@ public class PaymentDomainMock {
 
     public static PaymentDomain getPaymentStatusCompletedMock() {
         return PaymentDomain.builder()
-                .id("1")
+                .id(1)
 //@todo - refact
 //                .order(OrderDomainMock.getStatusNewMock())
 //                .customer(CustomerDomainMock.getMock())

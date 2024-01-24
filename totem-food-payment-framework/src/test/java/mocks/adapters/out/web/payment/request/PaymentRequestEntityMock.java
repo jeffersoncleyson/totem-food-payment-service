@@ -17,7 +17,7 @@ public class PaymentRequestEntityMock {
 
     public static PaymentRequestEntity getPaymentRequestEntity(PaymentModel item) {
         return PaymentRequestEntity.builder()
-                .externalReference(item.getId())
+                .externalReference(String.valueOf(item.getId()))
                 .totalAmount(BigDecimal.valueOf(item.getPrice()))
                 .items(getItemsRequest(item))
                 .title("Atendimento via Totem")
@@ -29,7 +29,7 @@ public class PaymentRequestEntityMock {
 
     private static List<PaymentItemsRequestEntity> getItemsRequest(PaymentModel item) {
         return List.of(PaymentItemsRequestEntity.builder()
-                .skuNumber(item.getId())
+                .skuNumber(String.valueOf(item.getId()))
                 .category("Alimentos")
                 .title("Totem Food Service")
                 .description("Pedido via Totem")

@@ -1,9 +1,10 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
+package com.totem.food.framework.adapters.out.persistence.mysql.payment.repository;
 
 import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper.IPaymentEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.repository.SearchUniquePaymentRepositoryAdapter;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,7 @@ class SearchUniquePaymentRepositoryAdapterTest {
     void findById() {
 
         //## Given
-        var id = UUID.randomUUID().toString();
+        var id = 1;
         var paymentEntity = PaymentEntity.builder().id(id).build();
 
         //## When

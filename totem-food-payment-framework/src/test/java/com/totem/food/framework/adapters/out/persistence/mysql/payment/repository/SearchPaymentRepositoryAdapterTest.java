@@ -1,13 +1,12 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
+package com.totem.food.framework.adapters.out.persistence.mysql.payment.repository;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper.IPaymentEntityMapper;
 import lombok.SneakyThrows;
 import mocks.entity.PaymentEntityMock;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,14 +92,14 @@ class SearchPaymentRepositoryAdapterTest {
                 .build();
 
         //## Given Mocks
-        when(repository.findByFilter(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getToken()))
+        when(repository.findByFilter(paymentFilter.getOrderId(), paymentFilter.getToken()))
                 .thenReturn(paymentEntity);
 
         //## When
         final var paymentDomain = iSearchRepositoryPort.findAll(paymentFilter);
 
         //## Then
-        verify(repository, times(1)).findByFilter(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getToken());
+        verify(repository, times(1)).findByFilter(paymentFilter.getOrderId(), paymentFilter.getToken());
         verify(iPaymentMapper, times(1)).toModel(paymentEntity);
 
         final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain.get(0));
@@ -122,14 +121,14 @@ class SearchPaymentRepositoryAdapterTest {
                 .build();
 
         //## Given Mocks
-        when(repository.findPaymentByOrderAndStatus(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getStatus()))
+        when(repository.findPaymentByOrderAndStatus(paymentFilter.getOrderId(), paymentFilter.getStatus()))
                 .thenReturn(paymentEntity);
 
         //## When
         final var paymentDomain = iSearchRepositoryPort.findAll(paymentFilter);
 
         //## Then
-        verify(repository, times(1)).findPaymentByOrderAndStatus(new ObjectId(paymentFilter.getOrderId()), paymentFilter.getStatus());
+        verify(repository, times(1)).findPaymentByOrderAndStatus(paymentFilter.getOrderId(), paymentFilter.getStatus());
         verify(iPaymentMapper, times(1)).toModel(paymentEntity);
 
         final var paymentEntityConverted = iPaymentMapper.toEntity(paymentDomain.get(0));

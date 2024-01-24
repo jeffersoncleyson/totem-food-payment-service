@@ -1,7 +1,6 @@
 package mocks.domains;
 
 import com.totem.food.domain.payment.PaymentDomain;
-import org.bson.types.ObjectId;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -11,7 +10,7 @@ public class PaymentDomainMock {
 
     public static PaymentDomain getPaymentDomain(PaymentDomain.PaymentStatus paymentStatus){
         return PaymentDomain.builder()
-                .id(new ObjectId().toHexString())
+                .id(1)
 //@todo - refact
 //                .order(OrderDomainMock.getStatusNewMock())
 //                .customer(CustomerDomainMock.getMock())

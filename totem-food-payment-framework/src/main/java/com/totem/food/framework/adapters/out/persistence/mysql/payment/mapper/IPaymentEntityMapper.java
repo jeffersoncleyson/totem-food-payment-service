@@ -1,7 +1,7 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper;
+package com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper;
 
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

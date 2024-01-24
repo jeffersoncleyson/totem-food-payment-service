@@ -18,11 +18,25 @@ logging:
     level: "%clr(${LOG_LEVEL_PATTERN: [%X{x-request-id}] [%X{x-environment-id}] [%X{x-customer-id}] -%5p})"
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: ${HIBERNATE_SHOW_QUERY:false}
+    properties:
+      hibernate:
+        format_sql: ${HIBERNATE_FORMAT_QUERY:false}
+        dialect: org.hibernate.dialect.MySQL8Dialect
   jackson:
     default-property-inclusion: non_null
-  data:
-    mongodb:
-      uri: ${PAYMENT_MONGODB_URI:mongodb://root:qwe123@localhost:27017/totem-food-payment?authSource=admin}
+  datasource:
+    url: ${PAYMENT_DB_URL:jdbc:mysql://localhost:3306/db_payment?createDatabaseIfNotExist=true}
+    username: ${PAYMENT_DB_USERNAME:root}
+    password: ${PAYMENT_DB_PASSWORD:qwe123}
+  liquibase:
+    change-log: classpath:/db/master.xml
+
 
 payment:
   url: ${PAYMENT_GATEWAY_URL:https://api.mercadopago.com}
@@ -43,3 +57,6 @@ ms:
       url: ${MS_INTERNAL_ORDER:http://localhost:8080}
     customer:
       url: ${MS_INTERNAL_CUSTOMER:http://localhost:8081}
+
+liquibase:
+  change-log: classpath:liquibase-changeLog.xml

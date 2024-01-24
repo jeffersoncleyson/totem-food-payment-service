@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class SearchPaymentExternalRequestAdapterTest {
 
-    private ISendRequestPort<String, PaymentElementDto> iSendRequestPort;
+    private ISendRequestPort<Integer, PaymentElementDto> iSendRequestPort;
 
     @Spy
     private MercadoPagoClient mercadoPagoClient;
@@ -56,7 +56,7 @@ class SearchPaymentExternalRequestAdapterTest {
                 .willReturn(ResponseEntity.ok(elementResponseEntity));
 
         //## When
-        var result = iSendRequestPort.sendRequest(externalPaymentId);
+        var result = iSendRequestPort.sendRequest(Integer.parseInt(externalPaymentId));
 
         //## Then
         assertThat(result).usingRecursiveAssertion().isNotNull();
@@ -76,7 +76,7 @@ class SearchPaymentExternalRequestAdapterTest {
                 .willReturn(ResponseEntity.ok(null));
 
         //## When
-        var result = iSendRequestPort.sendRequest(externalPaymentId);
+        var result = iSendRequestPort.sendRequest(Integer.parseInt(externalPaymentId));
 
         //## Then
         assertThat(result).usingRecursiveAssertion().isNull();

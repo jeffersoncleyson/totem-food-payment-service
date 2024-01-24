@@ -1,15 +1,14 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
+package com.totem.food.framework.adapters.out.persistence.mysql.payment.repository;
 
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
-import com.totem.food.framework.adapters.out.persistence.mongo.commons.BaseRepository;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mysql.commons.BaseRepository;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper.IPaymentEntityMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -23,12 +22,12 @@ import java.util.Objects;
 public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> {
 
     @Repository
-    protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, String> {
-        @Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'token' : ?1}")
-        PaymentEntity findByFilter(ObjectId order, String token);
+    protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, Integer> {
+        @Query("select p from PaymentEntity p where p.order = ?1 and p.token = ?2")
+        PaymentEntity findByFilter(String order, String token);
 
-        @Query("{'order' :{'$ref' : 'order' , '$id' : ?0}, 'status' : ?1}")
-        PaymentEntity findPaymentByOrderAndStatus(ObjectId order, String status);
+        @Query("select p from PaymentEntity p where p.order = ?1 and p.status = ?2")
+        PaymentEntity findPaymentByOrderAndStatus(String order, String status);
 
         List<PaymentEntity> findByStatusAndModifiedAtAfter(String status, ZonedDateTime localDateTime);
     }
@@ -45,12 +44,12 @@ public class SearchPaymentRepositoryAdapter implements ISearchRepositoryPort<Pay
         }
 
         if (StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getToken())) {
-            final var entity = repository.findByFilter(new ObjectId(item.getOrderId()), item.getToken());
+            final var entity = repository.findByFilter(item.getOrderId(), item.getToken());
             return Collections.singletonList(iPaymentMapper.toModel(entity));
         }
 
         if (StringUtils.isNotEmpty(item.getOrderId()) && StringUtils.isNotEmpty(item.getStatus())) {
-            final var entity = repository.findPaymentByOrderAndStatus(new ObjectId(item.getOrderId()), item.getStatus());
+            final var entity = repository.findPaymentByOrderAndStatus(item.getOrderId(), item.getStatus());
             return Collections.singletonList(iPaymentMapper.toModel(entity));
         }
 

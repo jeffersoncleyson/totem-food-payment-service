@@ -7,12 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.Arrays;
 
 @SpringBootApplication(scanBasePackages = "com.totem.food")
-@EnableMongoRepositories(basePackages = "com.totem.food", considerNestedRepositories = true)
+@EnableJpaRepositories(basePackages = "com.totem.food", considerNestedRepositories = true)
 @EnableFeignClients
 public class TotemFoodPaymentBackendApplication {
 	public static void main(String[] args) {

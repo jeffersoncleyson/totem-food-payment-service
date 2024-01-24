@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 @Getter
 @Builder
@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class PaymentDomain {
 
-    private String id;
+    private Integer id;
     private String order;
     private String customer;
     private double price;
@@ -31,7 +31,7 @@ public class PaymentDomain {
     }
 
     public void fillDates() {
-        if (StringUtils.isEmpty(this.id)) {
+        if (Objects.isNull(this.id)) {
             this.createAt = ZonedDateTime.now(ZoneOffset.UTC);
             this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
         }

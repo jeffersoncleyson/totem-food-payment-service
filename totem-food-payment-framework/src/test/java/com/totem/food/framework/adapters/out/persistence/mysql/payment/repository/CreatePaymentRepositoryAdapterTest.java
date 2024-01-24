@@ -1,10 +1,11 @@
-package com.totem.food.framework.adapters.out.persistence.mongo.payment.repository;
+package com.totem.food.framework.adapters.out.persistence.mysql.payment.repository;
 
-import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.entity.PaymentEntity;
-import com.totem.food.framework.adapters.out.persistence.mongo.payment.mapper.IPaymentEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper.IPaymentEntityMapper;
+import com.totem.food.framework.adapters.out.persistence.mysql.payment.repository.CreatePaymentRepositoryAdapter;
 import lombok.SneakyThrows;
 import mocks.entity.PaymentEntityMock;
 import mocks.models.PaymentModelMock;
@@ -25,20 +26,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UpdatePaymentRepositoryAdapterTest {
+class CreatePaymentRepositoryAdapterTest {
 
     @Mock
-    private UpdatePaymentRepositoryAdapter.PaymentRepositoryMongoDB repository;
+    private CreatePaymentRepositoryAdapter.PaymentRepositoryMongoDB repository;
     @Spy
-    private IPaymentEntityMapper iPaymentEntityMapper = Mappers.getMapper(IPaymentEntityMapper.class);
+    private IPaymentEntityMapper iPaymentMapper = Mappers.getMapper(IPaymentEntityMapper.class);
 
-    private IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort;
+    private ICreateRepositoryPort<PaymentModel> iCreateRepositoryPort;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        iUpdateRepositoryPort = new UpdatePaymentRepositoryAdapter(repository, iPaymentEntityMapper);
+        iCreateRepositoryPort = new CreatePaymentRepositoryAdapter(repository, iPaymentMapper);
     }
 
     @SneakyThrows
@@ -47,27 +48,26 @@ class UpdatePaymentRepositoryAdapterTest {
         autoCloseable.close();
     }
 
+
     @Test
-    void updateItem() {
+    void saveItem() {
 
         //## Given
-        final var paymentDomain = PaymentModelMock.getPaymentDomain(PaymentDomain.PaymentStatus.PENDING);
+        final var paymentModel = PaymentModelMock.getPaymentDomain(PaymentDomain.PaymentStatus.PENDING);
         final var paymentEntity = PaymentEntityMock.getPaymentEntity(PaymentDomain.PaymentStatus.PENDING);
 
         //## Given Mocks
         when(repository.save(Mockito.any(PaymentEntity.class))).thenReturn(paymentEntity);
 
         //## When
-        final var paymentDomainUpdated = iUpdateRepositoryPort.updateItem(paymentDomain);
+        final var paymentDomainUpdated = iCreateRepositoryPort.saveItem(paymentModel);
 
         //## Then
-        verify(iPaymentEntityMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
-        verify(iPaymentEntityMapper, times(1)).toModel(Mockito.any(PaymentEntity.class));
+        verify(iPaymentMapper, times(1)).toEntity(Mockito.any(PaymentModel.class));
+        verify(iPaymentMapper, times(1)).toModel(Mockito.any(PaymentEntity.class));
         verify(repository, times(1)).save(Mockito.any(PaymentEntity.class));
 
-        //Todo - Verificar mapeamento de cpf no target order
-        final var paymentEntityUpdated = iPaymentEntityMapper.toEntity(paymentDomainUpdated);
-
+        final var paymentEntityUpdated = iPaymentMapper.toEntity(paymentDomainUpdated);
         assertThat(paymentEntityUpdated).usingRecursiveComparison()
                 .ignoringFields("order.cpf")
                 .isEqualTo(paymentEntity);

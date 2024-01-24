@@ -20,7 +20,7 @@ public class PaymentMocks {
         );
     }
 
-    public static PaymentQRCodeDto paymentQRCodeDto(String paymentId, String status) {
+    public static PaymentQRCodeDto paymentQRCodeDto(Integer paymentId, String status) {
         return new PaymentQRCodeDto(
                 "qrcodeBase64",
                 "qrcode",
@@ -31,7 +31,7 @@ public class PaymentMocks {
 
     public static PaymentDto paymentDto(){
         return new PaymentDto(
-                UUID.randomUUID().toString(),
+                1,
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
                 25.0D,

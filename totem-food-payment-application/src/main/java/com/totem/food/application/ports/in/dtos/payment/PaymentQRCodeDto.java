@@ -14,5 +14,5 @@ public class PaymentQRCodeDto {
     private String qrcodeBase64;
     private String storeOrderId;
     private String status;
-    private String paymentId;
+    private Integer paymentId;
 }

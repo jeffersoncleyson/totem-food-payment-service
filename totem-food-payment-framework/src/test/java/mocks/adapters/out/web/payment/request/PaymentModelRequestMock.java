@@ -13,7 +13,7 @@ public class PaymentModelRequestMock {
 
     public static PaymentModel paymentDomain(){
         return PaymentModel.builder()
-                .id(UUID.randomUUID().toString())
+                .id(1)
 //@todo - refact
 //                .order(OrderDomainMock.getStatusNewMock())
 //                .customer(CustomerDomainMock.getMock())

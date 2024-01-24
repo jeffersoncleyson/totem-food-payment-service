@@ -1,7 +1,7 @@
 version: '3.5'
 
 networks:
-  order-service-network:
+  payment-service-network:
     driver: bridge
 
 volumes:
@@ -24,7 +24,22 @@ services:
       retries: 5
       start_period: 5s
     networks:
-      - order-service-network
+      - payment-service-network
+
+  mysql-dev:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql-dev
+    hostname: mysql-dev
+    env_file: envs/mysql/.env
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    networks:
+      - payment-service-network
 
   totem-food-order-service:
     container_name: totem-food-order-service
@@ -37,7 +52,7 @@ services:
     depends_on:
       - mongo-dev
     networks:
-      - order-service-network
+      - payment-service-network
 
   totem-food-payment-service:
     container_name: totem-food-payment-service
@@ -48,9 +63,9 @@ services:
       - "8082:8082"
       - "8782:8787" # DEBUG
     depends_on:
-      - mongo-dev
+      - mysql-dev
     networks:
-      - order-service-network
+      - payment-service-network
 
   totem-food-customer-service:
     container_name: totem-food-customer-service
@@ -61,7 +76,7 @@ services:
       - "8081:8081"
       - "8781:8787" # DEBUG
     networks:
-      - order-service-network
+      - payment-service-network
 
   mailhog:
     container_name: mailhog
@@ -72,4 +87,4 @@ services:
       - 1025:1025
       - 8025:8025
     networks:
-      - order-service-network
+      - payment-service-network
