@@ -2,7 +2,6 @@ package com.totem.food.framework.adapters.out.web.internal.order.request;
 
 import com.totem.food.application.ports.out.internal.order.OrderFilterRequest;
 import com.totem.food.application.ports.out.internal.order.OrderResponseRequest;
-import com.totem.food.application.ports.out.internal.order.OrderUpdateRequest;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.framework.adapters.out.web.internal.order.client.OrderMicroServiceClientApi;
 import lombok.AllArgsConstructor;

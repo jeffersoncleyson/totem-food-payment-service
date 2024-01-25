@@ -5,7 +5,6 @@ import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.domain.payment.PaymentDomain;
 import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper.IPaymentEntityMapper;
-import com.totem.food.framework.adapters.out.persistence.mysql.payment.repository.CreatePaymentRepositoryAdapter;
 import lombok.SneakyThrows;
 import mocks.entity.PaymentEntityMock;
 import mocks.models.PaymentModelMock;

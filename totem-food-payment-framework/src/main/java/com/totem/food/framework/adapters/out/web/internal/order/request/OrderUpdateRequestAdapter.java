@@ -5,7 +5,6 @@ import com.totem.food.application.ports.out.internal.order.OrderUpdateRequest;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.framework.adapters.out.web.internal.order.client.OrderMicroServiceClientApi;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 

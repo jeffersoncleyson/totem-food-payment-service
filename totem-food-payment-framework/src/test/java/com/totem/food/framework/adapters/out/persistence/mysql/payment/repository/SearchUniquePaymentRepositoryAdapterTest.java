@@ -4,7 +4,6 @@ import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRep
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
 import com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper.IPaymentEntityMapper;
-import com.totem.food.framework.adapters.out.persistence.mysql.payment.repository.SearchUniquePaymentRepositoryAdapter;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

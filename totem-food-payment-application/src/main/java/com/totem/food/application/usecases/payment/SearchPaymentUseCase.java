@@ -4,10 +4,8 @@ import com.totem.food.application.ports.in.dtos.payment.PaymentDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
-import com.totem.food.application.ports.out.persistence.commons.ISearchUniqueRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.usecases.annotations.UseCase;
-import com.totem.food.application.usecases.commons.ISearchUniqueUseCase;
 import com.totem.food.application.usecases.commons.ISearchUseCase;
 import lombok.AllArgsConstructor;
 
