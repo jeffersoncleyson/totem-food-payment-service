@@ -19,10 +19,6 @@ class PaymentDomainTest {
         //## Given
         var payment = PaymentDomain.builder()
                 .id(1)
-//@todo - refact
-//                .order(new
-//                        OrderDomain())
-//                .customer(new CustomerDomain())
                 .price(100.0)
                 .token("abc123")
                 .status(PaymentDomain.PaymentStatus.PENDING)
@@ -44,10 +40,6 @@ class PaymentDomainTest {
         //## Given
         var payment = PaymentDomain.builder()
                 .id(1)
-//@todo - refact
-//                .order(new
-//                        OrderDomain())
-//                .customer(new CustomerDomain())
                 .price(100.0)
                 .token("abc123")
                 .status(PaymentDomain.PaymentStatus.PENDING)
@@ -69,10 +61,6 @@ class PaymentDomainTest {
         //## Given
         var payment = PaymentDomain.builder()
                 .id(1)
-//@todo - refact
-//                .order(new
-//                        OrderDomain())
-//                .customer(new CustomerDomain())
                 .price(100.0)
                 .token("abc123")
                 .status(PaymentDomain.PaymentStatus.PENDING)

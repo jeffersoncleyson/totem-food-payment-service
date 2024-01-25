@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.payment;
 
+import com.totem.food.application.enums.OrderStatusEnum;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.context.XUserIdentifierContextDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
@@ -44,7 +45,7 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
                         .build())
                 .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", item.getOrderId())));
 
-        if (orderDomain.getStatus().equals("WAITING_PAYMENT")) { //@todo - refact - trocar para enum
+        if (orderDomain.getStatus().equals(OrderStatusEnum.WAITING_PAYMENT.toString())) {
             final var paymentDomainBuilder = PaymentDomain.builder();
 
             Optional.ofNullable(iContextUseCase.getContext())
@@ -83,7 +84,7 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
             return paymentDto;
         }
 
-        throw new InvalidStatusException("Order", orderDomain.getStatus(), "WAITING_PAYMENT"); //@todo - refact - trocar para enum
+        throw new InvalidStatusException("Order", orderDomain.getStatus(), OrderStatusEnum.WAITING_PAYMENT.toString());
     }
 
 }

@@ -12,9 +12,6 @@ public class PaymentModelMock {
     public static PaymentModel getPaymentDomain(PaymentDomain.PaymentStatus paymentStatus){
         return PaymentModel.builder()
                 .id(1)
-//@todo - refact
-//                .order(OrderDomainMock.getStatusNewMock())
-//                .customer(CustomerDomainMock.getMock())
                 .price(50D)
                 .token(UUID.randomUUID().toString())
                 .status(paymentStatus)

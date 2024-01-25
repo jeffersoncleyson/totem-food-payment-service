@@ -1,5 +1,6 @@
 package com.totem.food.application.usecases.payment;
 
+import com.totem.food.application.enums.OrderStatusEnum;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
@@ -69,7 +70,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     //## Verify Order is Received and Payment is Completed
     private static boolean verifyOrderPaid(PaymentDomain paymentDomain, OrderResponseRequest orderResponseRequest) {
         return !paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED)
-                && !orderResponseRequest.getStatus().equals("RECEIVED"); //@todo - refact - colocar enum no lugar
+                && !orderResponseRequest.getStatus().equals(OrderStatusEnum.RECEIVED.toString());
     }
 
     //## Update Payment
@@ -83,7 +84,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     private void updateOrderReceived(OrderResponseRequest orderResponseRequest) {
         final var orderUpdateRequest = OrderUpdateRequest.builder()
                 .orderId(orderResponseRequest.getId())
-                .status("RECEIVED") //@todo - refact - colocar enum no lugar
+                .status(OrderStatusEnum.RECEIVED.toString())
                 .build();
         iUpdateOrderRepositoryPort.sendRequest(orderUpdateRequest);
     }
