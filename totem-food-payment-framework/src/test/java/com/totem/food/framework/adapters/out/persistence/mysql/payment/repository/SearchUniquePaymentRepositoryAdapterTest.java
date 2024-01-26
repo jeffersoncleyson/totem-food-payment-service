@@ -47,13 +47,14 @@ class SearchUniquePaymentRepositoryAdapterTest {
     @Test
     void findById() {
 
-        //## Given
+        //## Mock - Object and Value
         var id = 1;
         var paymentEntity = PaymentEntity.builder().id(id).build();
 
-        //## When
+        //## Given
         when(repository.findById(id)).thenReturn(Optional.of(paymentEntity));
 
+        //## When
         var paymentDomain = iSearchUniqueRepositoryPort.findById(id);
 
         //## Then
