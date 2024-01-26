@@ -32,6 +32,7 @@ import java.util.UUID;
 
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ID;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID_AND_STATUS;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -67,7 +68,8 @@ class TotemPaymentRestApiAdapterTest {
     @BeforeEach
     void setup() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        final var totemPaymentRestApiAdapter = new TotemPaymentRestApiAdapter(iCreateUseCase, iSearchUniqueUseCase, iCreateImageUseCase, iSearchUseCase);
+        final var totemPaymentRestApiAdapter = new TotemPaymentRestApiAdapter(iCreateUseCase, iSearchUniqueUseCase, iCreateImageUseCase,
+            iSearchUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(totemPaymentRestApiAdapter).build();
     }
 
@@ -89,14 +91,14 @@ class TotemPaymentRestApiAdapterTest {
         final var jsonOpt = TestUtils.toJSON(paymentCreateDto);
         final var json = jsonOpt.orElseThrow();
         final var httpServletRequest = post(endpoint)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json);
         final var resultActions = mockMvc.perform(httpServletRequest);
 
         //### Then
         resultActions.andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         final var result = resultActions.andReturn();
         final var responseJson = result.getResponse().getContentAsString();
@@ -104,8 +106,8 @@ class TotemPaymentRestApiAdapterTest {
         final var paymentQRCodeDtoResponse = paymentQRCodeDtoResponseOpt.orElseThrow();
 
         assertThat(paymentQRCodeDto)
-                .usingRecursiveComparison()
-                .isEqualTo(paymentQRCodeDtoResponse);
+            .usingRecursiveComparison()
+            .isEqualTo(paymentQRCodeDtoResponse);
 
         verify(iCreateUseCase, times(1)).createItem(any(PaymentCreateDto.class));
     }
@@ -122,15 +124,15 @@ class TotemPaymentRestApiAdapterTest {
         when(iCreateImageUseCase.createImage(paymentDto)).thenReturn(new byte[32]);
 
         final var httpServletRequest = get(endpoint, paymentDto.getId())
-                .header("x-with-image-qrcode", true);
+            .header("x-with-image-qrcode", true);
 
         //### When
         final var resultActions = mockMvc.perform(httpServletRequest);
 
         //### Then
         resultActions.andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.IMAGE_PNG));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.IMAGE_PNG));
 
         final var result = resultActions.andReturn();
         final var responseJson = result.getResponse();
@@ -152,15 +154,15 @@ class TotemPaymentRestApiAdapterTest {
         when(iSearchUniqueUseCase.item(paymentDto.getId())).thenReturn(Optional.of(paymentDto));
 
         final var httpServletRequest = get(endpoint, paymentDto.getId())
-                .header("x-with-image-qrcode", false);
+            .header("x-with-image-qrcode", false);
 
         //### When
         final var resultActions = mockMvc.perform(httpServletRequest);
 
         //### Then
         resultActions.andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
 
         final var result = resultActions.andReturn();
         final var responseJson = result.getResponse().getContentAsString();
@@ -168,11 +170,65 @@ class TotemPaymentRestApiAdapterTest {
         final var paymentDtoResponse = paymentDtoResponseOpt.orElseThrow();
 
         Assertions.assertThat(paymentDtoResponse)
-                .usingRecursiveComparison()
-                .ignoringFieldsOfTypes(ZonedDateTime.class)
-                .isNotNull();
+            .usingRecursiveComparison()
+            .ignoringFieldsOfTypes(ZonedDateTime.class)
+            .isNotNull();
 
         verify(iCreateImageUseCase, never()).createImage(paymentDto);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = API_VERSION_1 + TOTEM_PAYMENT + PAYMENT_ORDER_ID_AND_STATUS)
+    void testUpdateInfoPayment(String endpoint) throws Exception {
+
+        //### Objects - Mocks
+        var paymentDto = PaymentMocks.paymentDto();
+
+        //### Given - Mocks
+        when(iSearchUseCase.items(any(PaymentFilterDto.class))).thenReturn(Optional.of(paymentDto));
+
+        final var httpServletRequest = get(endpoint, paymentDto.getOrder(), paymentDto.getStatus());
+
+        //### When
+        final var resultActions = mockMvc.perform(httpServletRequest);
+
+        //### Then
+        resultActions.andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        final var responseJson = resultActions.andReturn().getResponse().getContentAsString();
+        final var paymentDtoResponse = TestUtils.toObject(responseJson, PaymentDto.class).orElseThrow();
+
+        Assertions.assertThat(paymentDtoResponse)
+            .usingRecursiveComparison()
+            .ignoringFieldsOfTypes(ZonedDateTime.class)
+            .isNotNull()
+            .isEqualTo(paymentDto);
+
+        verify(iSearchUseCase, times(1)).items(any(PaymentFilterDto.class));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = API_VERSION_1 + TOTEM_PAYMENT + PAYMENT_ORDER_ID_AND_STATUS)
+    void testUpdateInfoPaymentWhenReturnStatusNoContent(String endpoint) throws Exception {
+
+        //### Objects - Mocks
+        var paymentDto = PaymentMocks.paymentDto();
+
+        //### Given - Mocks
+        when(iSearchUseCase.items(any(PaymentFilterDto.class))).thenReturn(Optional.empty());
+
+        final var httpServletRequest = get(endpoint, paymentDto.getOrder(), paymentDto.getStatus());
+
+        //### When
+        final var resultActions = mockMvc.perform(httpServletRequest);
+
+        //### Then
+        resultActions.andDo(print())
+            .andExpect(status().isNoContent());
+
+        verify(iSearchUseCase, times(1)).items(any(PaymentFilterDto.class));
     }
 
 }
