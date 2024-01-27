@@ -17,12 +17,16 @@ import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.payment.PaymentDomain;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-@AllArgsConstructor
 @UseCase
 public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Boolean> {
 
@@ -32,6 +36,26 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     private final ISendRequestPort<OrderUpdateRequest, Boolean> iUpdateOrderRepositoryPort;
     private final ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
     private final ISendRequestPort<Integer, PaymentElementDto> iSendRequest;
+    private final boolean isDevProfile;
+
+    public UpdatePaymentUseCase(
+            IPaymentMapper iPaymentMapper,
+            IUpdateRepositoryPort<PaymentModel> iUpdateRepositoryPort,
+            ISendRequestPort<OrderFilterRequest, Optional<OrderResponseRequest>> iSearchOrderModel,
+            ISendRequestPort<OrderUpdateRequest, Boolean> iUpdateOrderRepositoryPort,
+            ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort,
+            ISendRequestPort<Integer, PaymentElementDto> iSendRequest,
+            Environment environment
+    ) {
+        this.iPaymentMapper = iPaymentMapper;
+        this.iUpdateRepositoryPort = iUpdateRepositoryPort;
+        this.iSearchOrderModel = iSearchOrderModel;
+        this.iUpdateOrderRepositoryPort = iUpdateOrderRepositoryPort;
+        this.iSearchRepositoryPort = iSearchRepositoryPort;
+        this.iSendRequest = iSendRequest;
+        this.isDevProfile = Arrays.stream(environment.getActiveProfiles()).anyMatch(Predicate.isEqual("dev"));
+    }
+
 
     @Override
     public Boolean updateItem(PaymentFilterDto item, String id) {
@@ -47,7 +71,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
             var paymentElementDto = iSendRequest.sendRequest(paymentModel.getId());
 
-            if (Objects.nonNull(paymentElementDto) && paymentElementDto.getOrderStatus().equals("paid")) {
+            if (Objects.nonNull(paymentElementDto) && isPaid(paymentElementDto)) {
 
                 final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
 
@@ -65,6 +89,12 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
             }
         }
         return Boolean.TRUE;
+    }
+
+    private boolean isPaid(PaymentElementDto paymentElementDto) {
+
+        if (isDevProfile) return true;
+        return paymentElementDto.getOrderStatus().equals("paid");
     }
 
     //## Verify Order is Received and Payment is Completed

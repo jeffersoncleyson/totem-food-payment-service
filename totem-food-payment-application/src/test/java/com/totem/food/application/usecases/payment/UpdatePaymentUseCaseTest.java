@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.env.Environment;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,11 +65,16 @@ class UpdatePaymentUseCaseTest {
 
     private AutoCloseable closeable;
 
+    @Mock
+    private Environment environment;
+
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
+        when(environment.getActiveProfiles()).thenReturn(new String[]{"default"});
         updatePaymentUseCase = new UpdatePaymentUseCase(iPaymentMapper, iUpdateRepositoryPort, iSearchOrderModel, iUpdateOrderRepositoryPort,
-            iSearchRepositoryPort, iSendRequest);
+            iSearchRepositoryPort, iSendRequest, environment);
+
     }
 
     @SneakyThrows
