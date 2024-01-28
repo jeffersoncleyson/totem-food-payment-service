@@ -32,6 +32,7 @@ public class Routes {
     public static final String TOTEM_PAYMENT = "/totem/payment";
     public static final String PAYMENT_ID = "/{paymentId}";
     public static final String PAYMENT_ORDER_ID_AND_STATUS = "/order/{orderId}/payment-status/{statusName}";
+    public static final String PAYMENT_ORDER_ID_CANCEL = "/order/{orderId}/payment-cancel";
 
     //######## PRODUCT
     public static final String ADM_PRODUCT = "/administrative/product";

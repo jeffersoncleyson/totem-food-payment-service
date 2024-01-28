@@ -46,7 +46,8 @@ public class PaymentDomain {
 
     public enum PaymentStatus {
         PENDING("PENDING"),
-        COMPLETED("COMPLETED");
+        COMPLETED("COMPLETED"),
+        CANCELED("CANCELED");
 
         public final String key;
 

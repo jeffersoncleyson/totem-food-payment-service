@@ -1,7 +1,6 @@
 package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.enums.OrderStatusEnum;
-import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
@@ -15,10 +14,7 @@ import com.totem.food.application.ports.out.web.ISendRequestPort;
 import com.totem.food.application.usecases.annotations.UseCase;
 import com.totem.food.application.usecases.commons.IUpdateUseCase;
 import com.totem.food.domain.payment.PaymentDomain;
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
@@ -79,13 +75,14 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
                 final var orderFilterRequest = OrderFilterRequest.builder()
                         .orderId(orderId)
                         .build();
-                final var orderModel = iSearchOrderModel.sendRequest(orderFilterRequest)
-                        .orElseThrow(() -> new ElementNotFoundException(String.format("Order with orderId: [%s] not found", orderId)));
 
-                if (verifyOrderPaid(paymentDomain, orderModel)) {
-                    updatePaymentCompleted(paymentDomain);
-                    updateOrderReceived(orderModel);
-                }
+                iSearchOrderModel.sendRequest(orderFilterRequest)
+                        .ifPresent(orderModel -> {
+                            if (verifyOrderPaid(paymentDomain, orderModel)) {
+                                updatePaymentCompleted(paymentDomain);
+                                updateOrderReceived(orderModel);
+                            }
+                        });
             }
         }
         return Boolean.TRUE;

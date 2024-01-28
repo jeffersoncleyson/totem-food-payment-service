@@ -29,4 +29,8 @@ public class PaymentModel {
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;
 
+    public void updateStatus(PaymentDomain.PaymentStatus status){
+        this.status = status;
+    }
+
 }

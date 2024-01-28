@@ -30,10 +30,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -177,12 +175,7 @@ class UpdatePaymentUseCaseTest {
         when(iSearchOrderModel.sendRequest(any(OrderFilterRequest.class))).thenReturn(Optional.empty());
 
         //## When
-        var exception = assertThrows(ElementNotFoundException.class,
-            () -> updatePaymentUseCase.updateItem(paymentFilter, paymentModel.getCustomer()));
-
-        //## Then
-        assertNotNull(exception.getMessage());
-        assertEquals(String.format("Order with orderId: [%s] not found", paymentDomain.getOrder()), exception.getMessage());
+        assertDoesNotThrow(() -> updatePaymentUseCase.updateItem(paymentFilter, paymentModel.getCustomer()));
     }
 
     @Test
