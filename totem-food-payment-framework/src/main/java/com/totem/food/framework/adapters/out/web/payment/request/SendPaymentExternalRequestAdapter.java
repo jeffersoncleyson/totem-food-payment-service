@@ -31,8 +31,6 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
     @Value("${payment.callback}")
     private String paymentCallback;
     
-    private static final ZonedDateTime DURATION_QR_CODE = ZonedDateTime.now().plusHours(1);
-
     private final IPaymentResponseMapper iPaymentResponseMapper;
     private final MercadoPagoClient mercadoPagoClient;
 
@@ -53,9 +51,13 @@ public class SendPaymentExternalRequestAdapter implements ISendRequestPort<Payme
                 .items(getItemsRequest(item))
                 .title("Atendimento via Totem")
                 .description("Pedido realizado via auto atendimento Totem")
-                .expirationDate(DURATION_QR_CODE)
+                .expirationDate(getDurationOfQRCode())
                 .notificationUrl(paymentCallback)
                 .build();
+    }
+
+    public ZonedDateTime getDurationOfQRCode(){
+        return ZonedDateTime.now().plusHours(1);
     }
 
     private List<PaymentItemsRequestEntity> getItemsRequest(PaymentModel item) {
