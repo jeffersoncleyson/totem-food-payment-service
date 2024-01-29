@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="autoIncrement" value="true"/>
+
+    <!--
+        JHipster core tables.
+        The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
+    -->
+    <changeSet id="00000000000001" author="system">
+        <createTable tableName="PAYMENTS">
+            <column name="ID" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ORDER_ID" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="CUSTOMER_ID" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="STATUS" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="PRICE" type="float"/>
+            <column name="TOKEN" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="QR_CODE_BASE64" type="varchar(255)"/>
+            <column name="MODIFIED_AT" type="timestamp"/>
+            <column name="CREATE_AT" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
