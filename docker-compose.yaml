@@ -1,7 +1,7 @@
 version: '3.5'
 
 networks:
-  developer-network:
+  payment-service-network:
     driver: bridge
 
 volumes:
@@ -12,11 +12,9 @@ services:
     image: mongo:latest
     container_name: mongo-dev
     hostname: mongo-dev
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MY_MONGO_INITDB_ROOT_USERNAME}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MY_MONGO_INITDB_ROOT_PASSWORD}"
+    env_file: envs/mongo/.env
     ports:
-      - "${MY_MONGO_PORT}:27017"
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     healthcheck:
@@ -26,49 +24,61 @@ services:
       retries: 5
       start_period: 5s
     networks:
-      - developer-network
+      - payment-service-network
 
-  totem-food-service:
-    container_name: totem-food-service
-    hostname: totem-food-service
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      SPRING_DATA_MONGODB_HOST: mongo-dev
-      SPRING_DATA_MONGODB_PORT: 27017
-      SPRING_DATA_MONGODB_DATABASE: totem-food
-      SPRING_DATA_MONGODB_USERNAME: root
-      SPRING_DATA_MONGODB_PASSWORD: qwe123
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
-      PAYMENT_GATEWAY_URL: http://payment-gateway:5000/v1/online-payment
-      SMTP_HOST: mailhog
-      SMTP_PORT: 1025
-      SMTP_USERNAME: username
-      SMTP_PASSWORD: password
-      SMTP_AUTH_ENABLED: "false"
-      SMTP_TLS_ENABLED: "false"
-      SMTP_EMAIL: contato@totem.food.service.com.br
+  mysql-dev:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql-dev
+    hostname: mysql-dev
+    env_file: envs/mysql/.env
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    networks:
+      - payment-service-network
+
+  totem-food-order-service:
+    container_name: totem-food-order-service
+    hostname: totem-food-order-service
+    image: jeffersoncleyson/totem-food-order-service:latest
+    env_file: envs/order/.env
     ports:
       - "8080:8080"
-      - "8787:8787" # DEBUG
+      - "8780:8787" # DEBUG
     depends_on:
       - mongo-dev
     networks:
-      - developer-network
+      - payment-service-network
 
-  payment-gateway:
-    container_name: payment-gateway
-    hostname: payment-gateway
+  totem-food-payment-service:
+    container_name: totem-food-payment-service
+    hostname: totem-food-payment-service
     build:
-      context: ./mock-payment-gateway
+      context: .
       dockerfile: Dockerfile
+    env_file: envs/payment/.env
     ports:
-      - "5000:5000"
-    volumes:
-      - ./mock-payment-gateway/mocks:/app/mocks
+      - "8082:8082"
+      - "8782:8787" # DEBUG
+    depends_on:
+      - mongo-dev
     networks:
-      - developer-network
+      - payment-service-network
+
+  totem-food-customer-service:
+    container_name: totem-food-customer-service
+    hostname: totem-food-customer-service
+    image: jeffersoncleyson/totem-food-customer-service:latest
+    env_file: envs/customer/.env
+    ports:
+      - "8081:8081"
+      - "8781:8787" # DEBUG
+    networks:
+      - payment-service-network
 
   mailhog:
     container_name: mailhog
@@ -79,4 +89,4 @@ services:
       - 1025:1025
       - 8025:8025
     networks:
-      - developer-network
+      - payment-service-network
