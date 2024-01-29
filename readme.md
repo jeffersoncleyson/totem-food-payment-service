@@ -1,9 +1,9 @@
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/summary/new_code?id=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/summary/new_code?id=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c&metric=coverage)](https://sonarcloud.io/summary/new_code?id=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c&metric=bugs)](https://sonarcloud.io/summary/new_code?id=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=totem-food-service-4787bf24ba181ac258cb520837a657896a92044c)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service&metric=bugs)](https://sonarcloud.io/summary/new_code?id=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=fiap-tech-challenge-4787bf24ba181ac258cb520837a657896a92044c_totem-food-payment-service)
 
 ---
 
