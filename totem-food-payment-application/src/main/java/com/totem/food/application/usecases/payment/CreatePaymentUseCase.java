@@ -4,6 +4,7 @@ import com.totem.food.application.enums.OrderStatusEnum;
 import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.context.XUserIdentifierContextDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentCreateDto;
+import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentQRCodeDto;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
 import com.totem.food.application.ports.out.internal.customer.CustomerFilterRequest;
@@ -11,6 +12,7 @@ import com.totem.food.application.ports.out.internal.customer.CustomerResponse;
 import com.totem.food.application.ports.out.internal.order.OrderFilterRequest;
 import com.totem.food.application.ports.out.internal.order.OrderResponseRequest;
 import com.totem.food.application.ports.out.persistence.commons.ICreateRepositoryPort;
+import com.totem.food.application.ports.out.persistence.commons.ISearchRepositoryPort;
 import com.totem.food.application.ports.out.persistence.commons.IUpdateRepositoryPort;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.application.ports.out.web.ISendRequestPort;
@@ -36,14 +38,31 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
     private final ISendRequestPort<CustomerFilterRequest, Optional<CustomerResponse>> iSearchUniqueCustomerRepositoryPort;
     private final ISendRequestPort<PaymentModel, PaymentQRCodeDto> iSendRequest;
     private final IContextUseCase<XUserIdentifierContextDto, String> iContextUseCase;
+    private final ISearchRepositoryPort<PaymentFilterDto, Optional<PaymentModel>> iSearchRepositoryPort;
 
     @Override
     public PaymentQRCodeDto createItem(PaymentCreateDto item) {
 
         final var orderDomain = iSearchUniqueOrderRepositoryPort.sendRequest(OrderFilterRequest.builder()
                         .orderId(item.getOrderId())
+                        .customerId(item.getCustomerId())
                         .build())
                 .orElseThrow(() -> new ElementNotFoundException(String.format("Order [%s] not found", item.getOrderId())));
+
+        final var paymentQRCodeDtoOpt = iSearchRepositoryPort.findAll(
+                PaymentFilterDto.builder()
+                    .orderId(orderDomain.getId())
+                    .status(PaymentDomain.PaymentStatus.PENDING.key)
+                .build()
+        ).map(paymentModel -> new PaymentQRCodeDto(
+                paymentModel.getQrcodeBase64(),
+                orderDomain.getId(),
+                paymentModel.getStatus().key,
+                paymentModel.getId(),
+                paymentModel.getEmail()
+        ));
+
+        if(paymentQRCodeDtoOpt.isPresent()) return paymentQRCodeDtoOpt.get();
 
         if (orderDomain.getStatus().equals(OrderStatusEnum.WAITING_PAYMENT.toString())) {
             final var paymentDomainBuilder = PaymentDomain.builder();
@@ -63,6 +82,7 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
             paymentDomainBuilder.price(orderDomain.getPrice());
             paymentDomainBuilder.token(UUID.randomUUID().toString());
             paymentDomainBuilder.status(PaymentDomain.PaymentStatus.PENDING);
+            paymentDomainBuilder.email(0);
 
 
             final var paymentDomain = paymentDomainBuilder.build();
@@ -79,6 +99,7 @@ public class CreatePaymentUseCase implements ICreateUseCase<PaymentCreateDto, Pa
                 iUpdateRepositoryPort.updateItem(paymentDomainSaved);
             }
 
+            paymentDto.setEmail(paymentModel.getEmail());
             paymentDto.setStatus(PaymentDomain.PaymentStatus.PENDING.key);
             paymentDto.setPaymentId(paymentDomainSaved.getId());
             return paymentDto;

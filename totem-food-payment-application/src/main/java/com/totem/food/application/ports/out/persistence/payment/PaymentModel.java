@@ -20,6 +20,7 @@ public class PaymentModel {
     private String customer;
     private double price;
     private String token;
+    private Integer email;
 
     @Setter
     private String qrcodeBase64;

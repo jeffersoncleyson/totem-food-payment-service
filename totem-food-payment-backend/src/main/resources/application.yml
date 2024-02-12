@@ -51,8 +51,11 @@ app:
   description: ^project.description^
   inspect_beans: ${INSPECT_BEANS:false}
 
+
 ms:
   internal:
+    queue:
+      payment_create: ${PAYMENT_CREATE_QUEUE:create-payment-queue}
     order:
       url: ${MS_INTERNAL_ORDER:http://localhost:8080}
     customer:
@@ -60,3 +63,9 @@ ms:
 
 liquibase:
   change-log: classpath:liquibase-changeLog.xml
+
+localstack:
+  endpoint: http://localhost:4566
+  region: us-east-1
+  accessKey: teste
+  secretKey: teste

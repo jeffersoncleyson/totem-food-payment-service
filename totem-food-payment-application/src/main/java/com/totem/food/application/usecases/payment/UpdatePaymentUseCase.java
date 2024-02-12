@@ -1,9 +1,11 @@
 package com.totem.food.application.usecases.payment;
 
 import com.totem.food.application.enums.OrderStatusEnum;
+import com.totem.food.application.ports.in.dtos.event.PaymentEventMessageDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
 import com.totem.food.application.ports.in.mappers.payment.IPaymentMapper;
+import com.totem.food.application.ports.out.event.ISendEventPort;
 import com.totem.food.application.ports.out.internal.order.OrderFilterRequest;
 import com.totem.food.application.ports.out.internal.order.OrderResponseRequest;
 import com.totem.food.application.ports.out.internal.order.OrderUpdateRequest;
@@ -32,6 +34,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
     private final ISendRequestPort<OrderUpdateRequest, Boolean> iUpdateOrderRepositoryPort;
     private final ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort;
     private final ISendRequestPort<Integer, PaymentElementDto> iSendRequest;
+    private final ISendEventPort<PaymentEventMessageDto, Boolean> sendPaymentEventPort;
     private final boolean isDevProfile;
 
     public UpdatePaymentUseCase(
@@ -41,6 +44,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
             ISendRequestPort<OrderUpdateRequest, Boolean> iUpdateOrderRepositoryPort,
             ISearchRepositoryPort<PaymentFilterDto, List<PaymentModel>> iSearchRepositoryPort,
             ISendRequestPort<Integer, PaymentElementDto> iSendRequest,
+            ISendEventPort<PaymentEventMessageDto, Boolean> sendPaymentEventPort,
             Environment environment
     ) {
         this.iPaymentMapper = iPaymentMapper;
@@ -49,6 +53,7 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
         this.iUpdateOrderRepositoryPort = iUpdateOrderRepositoryPort;
         this.iSearchRepositoryPort = iSearchRepositoryPort;
         this.iSendRequest = iSendRequest;
+        this.sendPaymentEventPort = sendPaymentEventPort;
         this.isDevProfile = Arrays.stream(environment.getActiveProfiles()).anyMatch(Predicate.isEqual("dev"));
     }
 
@@ -71,18 +76,19 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
 
                 final var paymentDomain = iPaymentMapper.toDomain(paymentModel);
 
-                final var orderId = paymentDomain.getOrder();
-                final var orderFilterRequest = OrderFilterRequest.builder()
-                        .orderId(orderId)
-                        .build();
+                updatePaymentCompleted(paymentDomain);
 
-                iSearchOrderModel.sendRequest(orderFilterRequest)
-                        .ifPresent(orderModel -> {
-                            if (verifyOrderPaid(paymentDomain, orderModel)) {
-                                updatePaymentCompleted(paymentDomain);
-                                updateOrderReceived(orderModel);
-                            }
-                        });
+                sendPaymentEventPort.sendMessage(
+                        PaymentEventMessageDto.builder()
+                            .id(paymentDomain.getId())
+                            .order(paymentDomain.getOrder())
+                            .price(paymentDomain.getPrice())
+                            .status(paymentDomain.getStatus().key)
+                            .createAt(paymentDomain.getCreateAt().toString())
+                            .modifiedAt(paymentDomain.getModifiedAt().toString())
+                        .build()
+                );
+
             }
         }
         return Boolean.TRUE;
@@ -94,25 +100,10 @@ public class UpdatePaymentUseCase implements IUpdateUseCase<PaymentFilterDto, Bo
         return paymentElementDto.getOrderStatus().equals("paid");
     }
 
-    //## Verify Order is Received and Payment is Completed
-    private static boolean verifyOrderPaid(PaymentDomain paymentDomain, OrderResponseRequest orderResponseRequest) {
-        return !paymentDomain.getStatus().equals(PaymentDomain.PaymentStatus.COMPLETED)
-                && !orderResponseRequest.getStatus().equals(OrderStatusEnum.RECEIVED.toString());
-    }
-
     //## Update Payment
     private void updatePaymentCompleted(PaymentDomain paymentDomain) {
         paymentDomain.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
         final var paymentModelConverted = iPaymentMapper.toModel(paymentDomain);
         iUpdateRepositoryPort.updateItem(paymentModelConverted);
-    }
-
-    //## Update Order
-    private void updateOrderReceived(OrderResponseRequest orderResponseRequest) {
-        final var orderUpdateRequest = OrderUpdateRequest.builder()
-                .orderId(orderResponseRequest.getId())
-                .status(OrderStatusEnum.RECEIVED.toString())
-                .build();
-        iUpdateOrderRepositoryPort.sendRequest(orderUpdateRequest);
     }
 }

@@ -15,4 +15,9 @@ public class PaymentQRCodeDto {
     private String storeOrderId;
     private String status;
     private Integer paymentId;
+    private Integer email;
+
+    public boolean isEmailSentBefore(){
+        return this.email == 1;
+    }
 }

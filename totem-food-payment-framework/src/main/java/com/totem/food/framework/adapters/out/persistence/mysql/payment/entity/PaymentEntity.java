@@ -51,6 +51,9 @@ public class PaymentEntity {
     @Column(name = "QR_CODE_BASE64")
     private String qrcodeBase64;
 
+    @Column(name = "EMAIL")
+    private Integer email;
+
     @Column(name = "MODIFIED_AT")
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;

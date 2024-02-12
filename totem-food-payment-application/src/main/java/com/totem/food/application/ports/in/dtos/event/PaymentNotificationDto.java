@@ -1,17 +1,17 @@
-package com.totem.food.application.ports.out.internal.order;
+package com.totem.food.application.ports.in.dtos.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderFilterRequest {
+@Builder
+public class PaymentNotificationDto {
 
-    private String orderId;
-    private String customerId;
-
+    private OrderDto order;
 }

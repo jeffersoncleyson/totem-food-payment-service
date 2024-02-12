@@ -1,4 +1,4 @@
-package com.totem.food.application.ports.out.internal.order;
+package com.totem.food.application.ports.out.persistence.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderFilterRequest {
+public class PaymentEmailUpdateModel {
 
-    private String orderId;
-    private String customerId;
+    private Integer id;
+    private Integer email;
 
 }
