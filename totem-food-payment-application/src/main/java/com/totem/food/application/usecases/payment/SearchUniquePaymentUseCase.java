@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @UseCase
-public class SearchUniquePaymentUseCase implements ISearchUniqueUseCase<Integer, Optional<PaymentDto>> {
+public class SearchUniquePaymentUseCase implements ISearchUniqueUseCase<String, Optional<PaymentDto>> {
 
     private final ISearchUniqueRepositoryPort<Optional<PaymentModel>> iSearchUniqueRepositoryPort;
     private final IPaymentMapper iPaymentMapper;
 
     @Override
-    public Optional<PaymentDto> item(Integer id) {
-        return iSearchUniqueRepositoryPort.findById(id).map(iPaymentMapper::toDto);
+    public Optional<PaymentDto> item(String orderId) {
+        return iSearchUniqueRepositoryPort.findById(orderId).map(iPaymentMapper::toDto);
     }
 
 }

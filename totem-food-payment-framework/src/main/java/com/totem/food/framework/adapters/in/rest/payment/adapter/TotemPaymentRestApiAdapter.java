@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ID;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID_AND_STATUS;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID_CANCEL;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT;
@@ -46,7 +47,7 @@ public class TotemPaymentRestApiAdapter implements
         IUpdateStatusByIdRestApiPort<ResponseEntity<PaymentDto>> {
 
     private final ICreateUseCase<PaymentCreateDto, PaymentQRCodeDto> iCreateUseCase;
-    private final ISearchUniqueUseCase<Integer, Optional<PaymentDto>> iSearchUniqueUseCase;
+    private final ISearchUniqueUseCase<String, Optional<PaymentDto>> iSearchUniqueUseCase;
     private final ICreateImageUseCase<PaymentDto, byte[]> iCreateImageUseCase;
     private final ISearchUseCase<PaymentFilterDto, Optional<PaymentDto>> iSearchUseCase;
     private final IUpdateStatusUseCase<PaymentDto> iUpdateStatusUseCase;
@@ -58,12 +59,12 @@ public class TotemPaymentRestApiAdapter implements
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @GetMapping(value = PAYMENT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = PAYMENT_ORDER_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<Object> getImage(@PathVariable Integer paymentId,
+    public ResponseEntity<Object> getImage(@PathVariable String orderId,
                                            @RequestHeader(value = "x-with-image-qrcode", defaultValue = "true") boolean withImageQrCode) {
 
-        ResponseEntity<PaymentDto> paymentDto = iSearchUniqueUseCase.item(paymentId).map(ResponseEntity.status(HttpStatus.OK)::body)
+        ResponseEntity<PaymentDto> paymentDto = iSearchUniqueUseCase.item(orderId).map(ResponseEntity.status(HttpStatus.OK)::body)
                 .orElse(ResponseEntity.notFound().build());
 
         if (withImageQrCode) {
