@@ -79,6 +79,7 @@ public class OrderQueueAdapter implements IReceiveEventPort<Message<AWSMessage>,
                             var emailNotificationDto = getEmailNotificationDto(
                                     customerModel,
                                     imageString,
+                                    payment.getQrcodeBase64(),
                                     paymentEventMessageDto.getOrder().getId(),
                                     paymentEventMessageDto.getOrder().getPrice()
                             );
@@ -93,11 +94,17 @@ public class OrderQueueAdapter implements IReceiveEventPort<Message<AWSMessage>,
         return null;
     }
 
-    private static EmailNotificationDto getEmailNotificationDto(CustomerResponse customerModel, String imageString, String orderId, double price) {
+    private static EmailNotificationDto getEmailNotificationDto(CustomerResponse customerModel, String imageString, String qrCodeBase64, String orderId, double price) {
         var emailNotificationDto = new EmailNotificationDto();
         emailNotificationDto.setEmail(customerModel.getEmail());
         final var image = "<img src=\"data:image/jpeg;base64,".concat(imageString).concat("\">");
-        emailNotificationDto.setMessage(String.format("Pagamento no valor de <b>R$ ".concat(String.valueOf(price)).concat("</b>! </br> Para pagar escanear o QRCode abaixo! </br> ").concat(image)));
+        final var message = String.format(
+                "Pagamento no valor de <b>R$ %.2f </b>! </br> Formas de pagamento! </br> Código pix: <b>%s</b> </br> QRCode abaixo! </br> %s",
+                price,
+                qrCodeBase64,
+                image
+        );
+        emailNotificationDto.setMessage(message);
         emailNotificationDto.setSubject(String.format("[%s] Pagamento do Pedido %s", "Totem Food Service", orderId));
         return emailNotificationDto;
     }
