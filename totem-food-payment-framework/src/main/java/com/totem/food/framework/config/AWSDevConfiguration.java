@@ -77,13 +77,13 @@ public class AWSDevConfiguration {
 
 	@Bean
 	SqsAsyncClient sqsAsyncClient() throws URISyntaxException {
-		var snsDebug = new StringBuilder("\n*****************************").append("\n");
+		var snsDebug = new StringBuilder("\n############## [SQS] ###############").append("\n");
 		snsDebug.append("* ActiveProfiles: ").append(Arrays.toString(env.getActiveProfiles())).append("\n");
 		snsDebug.append("* DefaultProfiles: ").append(Arrays.toString(env.getDefaultProfiles())).append("\n");
 		snsDebug.append("* SqsAsyncClient [serviceEndpoint]: ").append(endpoint).append("\n");
 		snsDebug.append("* SqsAsyncClient [signingRegion]: ").append(region).append("\n");
 		snsDebug.append("* SqsAsyncClient [CredentialsProvider]: ").append("AwsBasicCredentials").append("\n");
-		snsDebug.append("*****************************").append("\n");
+		snsDebug.append("##############################").append("\n");
 		log.debug(snsDebug.toString());
 		var targetAwsUri = new URI(endpoint);
 		var staticCredentialsProvider = StaticCredentialsProvider
