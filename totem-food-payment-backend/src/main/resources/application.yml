@@ -54,6 +54,9 @@ app:
 
 ms:
   internal:
+    topic:
+      payment: ${PAYMENT_TOPIC:payment-topic}
+      email: ${EMAIL_TOPIC:email-topic}
     queue:
       payment_create: ${PAYMENT_CREATE_QUEUE:create-payment-queue}
     order:
