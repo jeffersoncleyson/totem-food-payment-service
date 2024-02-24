@@ -18,6 +18,8 @@ logging:
     level: "%clr(${LOG_LEVEL_PATTERN: [%X{x-request-id}] [%X{x-environment-id}] [%X{x-customer-id}] -%5p})"
 
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:default}
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
@@ -68,7 +70,7 @@ liquibase:
   change-log: classpath:liquibase-changeLog.xml
 
 localstack:
-  endpoint: http://localhost:4566
-  region: us-east-1
-  accessKey: teste
-  secretKey: teste
+  endpoint: ${LOCALSTACK_ENDPOINT:http://localhost:4566}
+  region: ${LOCALSTACK_REGION:us-east-1}
+  accessKey: ${LOCALSTACK_ACCESS_KEY:teste}
+  secretKey: ${LOCALSTACK_SECRET_KEY:teste}
