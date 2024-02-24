@@ -25,7 +25,8 @@ public class PaymentMocks {
                 "qrcodeBase64",
                 "qrcode",
                 status,
-                paymentId
+                paymentId,
+                0
         );
     }
 
