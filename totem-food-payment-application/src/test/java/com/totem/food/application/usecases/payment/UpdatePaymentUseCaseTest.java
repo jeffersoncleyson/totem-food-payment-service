@@ -1,6 +1,5 @@
 package com.totem.food.application.usecases.payment;
 
-import com.totem.food.application.exceptions.ElementNotFoundException;
 import com.totem.food.application.ports.in.dtos.event.PaymentEventMessageDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentElementDto;
 import com.totem.food.application.ports.in.dtos.payment.PaymentFilterDto;
@@ -41,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -107,6 +107,49 @@ class UpdatePaymentUseCaseTest {
     }
 
     @Test
+    void updateItem() {
+
+        //## Mock - Object
+        var uuid = UUID.randomUUID().toString();
+
+        var paymentModel = PaymentModelMock.getStatusCompletedToUpdatePaymentUseCase(uuid);
+
+        var paymentElementDto = PaymentElementDto.builder()
+                .orderStatus("paid")
+                .build();
+
+        var paymentDomain = PaymentDomainMock.getPaymentToUpdatePaymentUseCase(PaymentDomain.PaymentStatus.PENDING);
+
+        var paymentFilter = PaymentFilterDto.builder()
+                .orderId(uuid)
+                .token(paymentModel.getToken())
+                .build();
+
+        var customerResponse = new CustomerResponse();
+        customerResponse.setId(uuid);
+
+        //## Given
+        when(iSearchRepositoryPort.findAll(any(PaymentFilterDto.class))).thenReturn(List.of(paymentModel));
+        when(iSendRequest.sendRequest(any(Integer.class))).thenReturn(paymentElementDto);
+        when(iPaymentMapper.toDomain(any(PaymentModel.class))).thenReturn(paymentDomain);
+
+        paymentModel.updateStatus(PaymentDomain.PaymentStatus.COMPLETED);
+        when(iPaymentMapper.toModel(any(PaymentDomain.class))).thenReturn(paymentModel);
+        when(iSearchUniqueCustomerRepositoryPort.sendRequest(any(CustomerFilterRequest.class)))
+                .thenReturn(Optional.of(customerResponse));
+
+
+        //## When
+        Boolean result = updatePaymentUseCase.updateItem(paymentFilter, paymentModel.getCustomer());
+
+        //## Then
+        assertTrue(result);
+
+        verify(iUpdateRepositoryPort, times(1)).updateItem(any(PaymentModel.class));
+        verify(sendPaymentEventPort, times(1)).sendMessage(any(PaymentEventMessageDto.class));
+    }
+
+    @Test
     void updateItemWhenPaymentIsEmpty() {
 
         //## Mock - Object
@@ -115,9 +158,9 @@ class UpdatePaymentUseCaseTest {
         var paymentModel = PaymentModelMock.getStatusCompletedToUpdatePaymentUseCase(uuid);
 
         var paymentFilter = PaymentFilterDto.builder()
-            .orderId(uuid)
-            .token(paymentModel.getToken())
-            .build();
+                .orderId(uuid)
+                .token(paymentModel.getToken())
+                .build();
 
         //## Given
         when(iSearchRepositoryPort.findAll(any(PaymentFilterDto.class))).thenReturn(List.of());
@@ -136,47 +179,6 @@ class UpdatePaymentUseCaseTest {
 
     @Test
     @Disabled("Arrumar este teste")
-    void updateItem() {
-
-        //## Mock - Object
-        var uuid = UUID.randomUUID().toString();
-
-        var paymentModel = PaymentModelMock.getStatusCompletedToUpdatePaymentUseCase(uuid);
-
-        var paymentElementDto = PaymentElementDto.builder()
-            .orderStatus("paid")
-            .build();
-
-        var paymentDomain = PaymentDomainMock.getPaymentToUpdatePaymentUseCase(PaymentDomain.PaymentStatus.PENDING);
-
-        var paymentFilter = PaymentFilterDto.builder()
-            .orderId(uuid)
-            .token(paymentModel.getToken())
-            .build();
-
-        var orderResponseRequest = OrderResponseRequest.builder()
-            .id(uuid)
-            .status(paymentModel.getStatus().toString())
-            .price(paymentModel.getPrice())
-            .build();
-
-        //## Given
-        when(iSearchRepositoryPort.findAll(any(PaymentFilterDto.class))).thenReturn(List.of(paymentModel));
-        when(iSendRequest.sendRequest(any(Integer.class))).thenReturn(paymentElementDto);
-        when(iPaymentMapper.toDomain(any(PaymentModel.class))).thenReturn(paymentDomain);
-        when(iSearchOrderModel.sendRequest(any(OrderFilterRequest.class))).thenReturn(Optional.ofNullable(orderResponseRequest));
-        when(iPaymentMapper.toModel(any(PaymentDomain.class))).thenReturn(paymentModel);
-        when(iUpdateRepositoryPort.updateItem(any(PaymentModel.class))).thenReturn(paymentModel);
-
-        //## When
-        Boolean result = updatePaymentUseCase.updateItem(paymentFilter, paymentModel.getCustomer());
-
-        //## Then
-        assertTrue(result);
-    }
-
-    @Test
-    @Disabled("Arrumar este teste")
     void updateItemWhenElementNotFoundException() {
 
         //## Mock - Object
@@ -185,15 +187,15 @@ class UpdatePaymentUseCaseTest {
         var paymentModel = PaymentModelMock.getStatusCompletedToUpdatePaymentUseCase(uuid);
 
         var paymentElementDto = PaymentElementDto.builder()
-            .orderStatus("paid")
-            .build();
+                .orderStatus("paid")
+                .build();
 
         var paymentDomain = PaymentDomainMock.getPaymentToUpdatePaymentUseCase(PaymentDomain.PaymentStatus.PENDING);
 
         var paymentFilter = PaymentFilterDto.builder()
-            .orderId(uuid)
-            .token(paymentModel.getToken())
-            .build();
+                .orderId(uuid)
+                .token(paymentModel.getToken())
+                .build();
 
         //## Given
         when(iSearchRepositoryPort.findAll(any(PaymentFilterDto.class))).thenReturn(List.of(paymentModel));
@@ -203,45 +205,6 @@ class UpdatePaymentUseCaseTest {
 
         //## When
         assertDoesNotThrow(() -> updatePaymentUseCase.updateItem(paymentFilter, paymentModel.getCustomer()));
-    }
-
-    @Test
-    @Disabled("Arrumar este teste")
-    void updateItemWhenVerifyOrderPaidReturnFalse() {
-
-        //## Mock - Object
-        var uuid = UUID.randomUUID().toString();
-
-        var paymentModel = PaymentModelMock.getStatusCompletedToUpdatePaymentUseCase(uuid);
-
-        var paymentElementDto = PaymentElementDto.builder()
-            .orderStatus("paid")
-            .build();
-
-        var paymentDomain = PaymentDomainMock.getPaymentToUpdatePaymentUseCase(PaymentDomain.PaymentStatus.COMPLETED);
-
-        var paymentFilter = PaymentFilterDto.builder()
-            .orderId(uuid)
-            .token(paymentModel.getToken())
-            .build();
-
-        var orderResponseRequest = OrderResponseRequest.builder()
-            .id(uuid)
-            .status(paymentModel.getStatus().toString())
-            .price(paymentModel.getPrice())
-            .build();
-
-        //## Given
-        when(iSearchRepositoryPort.findAll(any(PaymentFilterDto.class))).thenReturn(List.of(paymentModel));
-        when(iSendRequest.sendRequest(any(Integer.class))).thenReturn(paymentElementDto);
-        when(iPaymentMapper.toDomain(any(PaymentModel.class))).thenReturn(paymentDomain);
-        when(iSearchOrderModel.sendRequest(any(OrderFilterRequest.class))).thenReturn(Optional.ofNullable(orderResponseRequest));
-
-        //## When
-        Boolean result = updatePaymentUseCase.updateItem(paymentFilter, paymentModel.getCustomer());
-
-        //## Then
-        assertTrue(result);
     }
 
 }
