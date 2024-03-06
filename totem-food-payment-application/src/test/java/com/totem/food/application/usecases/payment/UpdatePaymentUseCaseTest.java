@@ -21,7 +21,6 @@ import mock.domain.PaymentDomainMock;
 import mock.models.PaymentModelMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -35,7 +34,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -175,36 +173,6 @@ class UpdatePaymentUseCaseTest {
         verify(iSearchOrderModel, never()).sendRequest(any(OrderFilterRequest.class));
         verify(iPaymentMapper, never()).toModel(any(PaymentDomain.class));
         verify(iUpdateRepositoryPort, never()).updateItem(any(PaymentModel.class));
-    }
-
-    @Test
-    @Disabled("Arrumar este teste")
-    void updateItemWhenElementNotFoundException() {
-
-        //## Mock - Object
-        var uuid = UUID.randomUUID().toString();
-
-        var paymentModel = PaymentModelMock.getStatusCompletedToUpdatePaymentUseCase(uuid);
-
-        var paymentElementDto = PaymentElementDto.builder()
-                .orderStatus("paid")
-                .build();
-
-        var paymentDomain = PaymentDomainMock.getPaymentToUpdatePaymentUseCase(PaymentDomain.PaymentStatus.PENDING);
-
-        var paymentFilter = PaymentFilterDto.builder()
-                .orderId(uuid)
-                .token(paymentModel.getToken())
-                .build();
-
-        //## Given
-        when(iSearchRepositoryPort.findAll(any(PaymentFilterDto.class))).thenReturn(List.of(paymentModel));
-        when(iSendRequest.sendRequest(any(Integer.class))).thenReturn(paymentElementDto);
-        when(iPaymentMapper.toDomain(any(PaymentModel.class))).thenReturn(paymentDomain);
-        when(iSearchOrderModel.sendRequest(any(OrderFilterRequest.class))).thenReturn(Optional.empty());
-
-        //## When
-        assertDoesNotThrow(() -> updatePaymentUseCase.updateItem(paymentFilter, paymentModel.getCustomer()));
     }
 
 }
