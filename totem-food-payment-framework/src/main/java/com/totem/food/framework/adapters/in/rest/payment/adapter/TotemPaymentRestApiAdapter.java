@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
-import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ID;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID_AND_STATUS;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.PAYMENT_ORDER_ID_CANCEL;
