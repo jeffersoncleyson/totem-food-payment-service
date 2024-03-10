@@ -6,12 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name = "OrderMicroServiceClientApi", url = "${ms.internal.order.url}")
 public interface OrderMicroServiceClientApi {
 
     @GetMapping(value = "/v1/totem/order/{id}", produces = "application/json")
-    ResponseEntity<OrderResponseRequest> getOrderById(@PathVariable("id") String id);
+    ResponseEntity<OrderResponseRequest> getOrderById(@PathVariable("id") String id, @RequestHeader("x-user-identifier") String customerId);
 
     @PutMapping(value = "/v1/totem/order/{orderId}/status/{statusName}", produces = "application/json")
     ResponseEntity<OrderResponseRequest> updateOrder(@PathVariable(name = "orderId") String id, @PathVariable(name = "statusName") String status);

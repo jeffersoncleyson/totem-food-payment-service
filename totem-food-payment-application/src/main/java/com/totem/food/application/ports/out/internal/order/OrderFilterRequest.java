@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class OrderFilterRequest {
 
     private String orderId;
+    private String customerId;
 
 }
