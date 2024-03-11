@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.API_VERSION_1;
 import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT;
+import static com.totem.food.framework.adapters.in.rest.constants.Routes.TOTEM_PAYMENT_CALLBACK;
 
 @RequiredArgsConstructor
 @Configuration
@@ -35,6 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(xUserIdentifierInterceptor)
                 .addPathPatterns(API_VERSION_1 + TOTEM_PAYMENT + "/**")
+                .excludePathPatterns(API_VERSION_1 + TOTEM_PAYMENT_CALLBACK)
                 .excludePathPatterns(EXCLUDE_PATH_PATTERNS);
     }
 }
