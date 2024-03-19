@@ -18,6 +18,8 @@ logging:
     level: "%clr(${LOG_LEVEL_PATTERN: [%X{x-request-id}] [%X{x-environment-id}] [%X{x-customer-id}] -%5p})"
 
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:default}
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
@@ -51,8 +53,14 @@ app:
   description: ^project.description^
   inspect_beans: ${INSPECT_BEANS:false}
 
+
 ms:
   internal:
+    topic:
+      payment: ${PAYMENT_TOPIC:payment-topic}
+      email: ${EMAIL_TOPIC:email-topic}
+    queue:
+      payment_create: ${PAYMENT_CREATE_QUEUE:create-payment-queue}
     order:
       url: ${MS_INTERNAL_ORDER:http://localhost:8080}
     customer:
@@ -60,3 +68,9 @@ ms:
 
 liquibase:
   change-log: classpath:liquibase-changeLog.xml
+
+localstack:
+  endpoint: ${LOCALSTACK_ENDPOINT:http://localhost:4566}
+  region: ${LOCALSTACK_REGION:us-east-1}
+  accessKey: ${LOCALSTACK_ACCESS_KEY:teste}
+  secretKey: ${LOCALSTACK_SECRET_KEY:teste}

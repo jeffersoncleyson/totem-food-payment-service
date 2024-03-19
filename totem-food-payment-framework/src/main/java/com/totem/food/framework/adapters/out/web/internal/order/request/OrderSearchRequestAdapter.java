@@ -18,7 +18,7 @@ public class OrderSearchRequestAdapter implements ISendRequestPort<OrderFilterRe
 
     @Override
     public Optional<OrderResponseRequest> sendRequest(OrderFilterRequest item) {
-        return Optional.of(orderMicroServiceClientApi.getOrderById(item.getOrderId()))
+        return Optional.of(orderMicroServiceClientApi.getOrderById(item.getOrderId(), item.getCustomerId()))
                 .map(ResponseEntity::getBody);
     }
 }

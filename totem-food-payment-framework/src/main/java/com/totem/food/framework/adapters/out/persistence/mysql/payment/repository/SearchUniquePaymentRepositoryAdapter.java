@@ -17,15 +17,15 @@ public class SearchUniquePaymentRepositoryAdapter implements ISearchUniqueReposi
 
     @Repository
     protected interface PaymentRepositoryMongoDB extends BaseRepository<PaymentEntity, Integer> {
-
+        Optional<PaymentEntity> findByOrder(String orderId);
     }
 
     private final PaymentRepositoryMongoDB repository;
     private final IPaymentEntityMapper iPaymentMapper;
 
     @Override
-    public Optional<PaymentModel> findById(Integer id) {
-        return repository.findById(id).map(iPaymentMapper::toModel);
+    public Optional<PaymentModel> findById(String orderId) {
+        return repository.findByOrder(orderId).map(iPaymentMapper::toModel);
     }
 
 }

@@ -22,6 +22,9 @@ public class PaymentDomain {
     private String token;
 
     @Builder.Default
+    private Integer email = 0;
+
+    @Builder.Default
     private PaymentStatus status = PaymentStatus.PENDING;
     private ZonedDateTime modifiedAt;
     private ZonedDateTime createAt;

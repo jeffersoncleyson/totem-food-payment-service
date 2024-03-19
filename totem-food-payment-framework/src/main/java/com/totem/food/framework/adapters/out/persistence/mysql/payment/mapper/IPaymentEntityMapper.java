@@ -1,5 +1,6 @@
 package com.totem.food.framework.adapters.out.persistence.mysql.payment.mapper;
 
+import com.totem.food.application.ports.out.persistence.payment.PaymentEmailUpdateModel;
 import com.totem.food.application.ports.out.persistence.payment.PaymentModel;
 import com.totem.food.framework.adapters.out.persistence.mysql.payment.entity.PaymentEntity;
 import org.mapstruct.Mapper;
@@ -17,6 +18,8 @@ public interface IPaymentEntityMapper {
     PaymentEntity toEntity(PaymentModel input);
 
     PaymentModel toModel(PaymentEntity input);
+
+    PaymentEmailUpdateModel toModelEmail(PaymentEntity paymentEntity);
 
     List<PaymentModel> toModel(List<PaymentEntity> input);
 
